@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Delete Car</title>
+</head>
+<body>
+    <form action="#" th:action="@{/deleteCar}" th:object="${car}" method="post">
+        <table>
+            <tr>
+                <td>
+                    <input type="text" th:field="*{id}"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="submit" value="Submit"/>
+                </td>
+            </tr>
+        </table>
+    </form>
+</body>
+</html>

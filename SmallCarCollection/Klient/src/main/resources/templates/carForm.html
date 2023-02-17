@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CarForm</title>
+</head>
+<body>
+
+<form action="#" th:action="@{/saveCar}" th:object="${car}" method="post">
+    <table>
+    <tr>
+        <td>
+            <input type="text" th:field="*{make}" />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <input type="text" th:field="*{registration}" />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <input type="submit" value="Submit" />
+        </td>
+    </tr>
+    </table></form>
+
+</body>
+</html>
