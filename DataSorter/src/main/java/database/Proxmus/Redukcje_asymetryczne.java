@@ -46,14 +46,14 @@ public class Redukcje_asymetryczne {
 
             ResultSetMetaData metaData = resultSet.getMetaData();
             int columnCount = metaData.getColumnCount();
-            for (int i = 2; i <= columnCount; i++) {
+            for (int i = 1; i <= columnCount; i++) {
                 tableModel.addColumn(metaData.getColumnLabel(i));
             }
 
             while (resultSet.next()) {
                 Object[] rowData = new Object[columnCount + 1];
-                for (int i = 2; i <= columnCount; i++) {
-                    rowData[i - 2] = resultSet.getObject(i);
+                for (int i = 1; i <= columnCount; i++) {
+                    rowData[i - 1] = resultSet.getObject(i);
                 }
                 tableModel.addRow(rowData);
 
