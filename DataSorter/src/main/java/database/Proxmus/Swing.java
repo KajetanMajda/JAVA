@@ -5,14 +5,17 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Swing{
+public class Swing extends JFrame{
 
     private JPanel panel_main;
     private JButton kolanaButton;
+
     private JButton korkiButton;
     private JButton mufyButton;
     private JButton redukcjeButton;
+
     private JButton trojnikiButton;
+
 
     static Image icon = Toolkit.getDefaultToolkit().getImage("pingwin.jpg");
 
@@ -24,6 +27,7 @@ public class Swing{
 
 
     public Swing() {
+
         podzialRedukcji = new Podzial_redukcji();
         podzialTrojnikow = new Podzial_trojnikow();
 
@@ -66,8 +70,8 @@ public class Swing{
         frame.setIconImage(icon);
         frame.pack();
         frame.setVisible(true);
-        frame.setBounds(560,340,800,400);
-
+        frame.setSize(1300,300);
+        frame.setLocationRelativeTo(null);
     }
 }
 

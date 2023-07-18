@@ -19,7 +19,7 @@ public class Trojniki_redukcyjne {
 
     public static void showTable() {
         JFrame tableFrame = new JFrame("Tabela_Trojnikow_Redukcyjnych");
-        tableFrame.setSize(1500, 800);
+        tableFrame.setSize(1600, 1000);
         tableFrame.setIconImage(icon);
         tableFrame.setLocationRelativeTo(null);
 

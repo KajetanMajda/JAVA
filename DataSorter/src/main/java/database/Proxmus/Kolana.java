@@ -19,7 +19,7 @@ public class Kolana {
 
     public static void showTable() {
         JFrame tableFrame = new JFrame("Tabela_Kolana");
-        tableFrame.setSize(1500, 800);
+        tableFrame.setSize(1600, 1000);
         tableFrame.setIconImage(icon);
         tableFrame.setLocationRelativeTo(null);
 

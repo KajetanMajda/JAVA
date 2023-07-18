@@ -19,7 +19,7 @@ public class Trojnki_rownoramienne {
 
     public static void showTable() {
         JFrame tableFrame = new JFrame("Tabela_Trojnikow_Rownoramiennych");
-        tableFrame.setSize(1400, 800);
+        tableFrame.setSize(1600, 1000);
         tableFrame.setIconImage(icon);
         tableFrame.setLocationRelativeTo(null);
 

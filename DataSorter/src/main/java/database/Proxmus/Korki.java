@@ -19,7 +19,7 @@ public class Korki {
 
     public static void showTable() {
         JFrame tableFrame = new JFrame("Tabela_Korki");
-        tableFrame.setSize(1000, 400);
+        tableFrame.setSize(1600, 1000);
         tableFrame.setIconImage(icon);
         tableFrame.setLocationRelativeTo(null);
 

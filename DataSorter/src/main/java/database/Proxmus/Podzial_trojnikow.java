@@ -73,6 +73,7 @@ public void trojniki_podzial() {
     frame.setIconImage(icon);
     frame.pack();
     frame.setVisible(true);
-    frame.setBounds(560,340,800,400);
+    frame.setSize(1000,300);
+    frame.setLocationRelativeTo(null);
 }
 }

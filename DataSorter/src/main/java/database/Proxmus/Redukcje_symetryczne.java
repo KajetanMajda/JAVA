@@ -19,7 +19,7 @@ public class Redukcje_symetryczne {
 
     public static void showTable() {
         JFrame tableFrame = new JFrame("Tabela_Redukcje_Symetryczne");
-        tableFrame.setSize(1400, 800);
+        tableFrame.setSize(1600, 1000);
         tableFrame.setIconImage(icon);
         tableFrame.setLocationRelativeTo(null);
 

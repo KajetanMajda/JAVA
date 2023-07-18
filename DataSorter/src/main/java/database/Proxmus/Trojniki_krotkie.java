@@ -19,7 +19,7 @@ public class Trojniki_krotkie {
 
     public static void showTable() {
         JFrame tableFrame = new JFrame("Tabela_Trojnikow_Krotkich");
-        tableFrame.setSize(1600, 600);
+        tableFrame.setSize(1600, 1000);
         tableFrame.setIconImage(icon);
         tableFrame.setLocationRelativeTo(null);
 

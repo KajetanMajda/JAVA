@@ -50,6 +50,7 @@ public class Podzial_redukcji{
         frame.setIconImage(icon);
         frame.pack();
         frame.setVisible(true);
-        frame.setBounds(560,340,800,400);
+        frame.setSize(600,300);
+        frame.setLocationRelativeTo(null);
     }
 }
