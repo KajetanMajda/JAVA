@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Proxmus</title>
+</head>
+<body>
+<style>
+
+    body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+    .srodek{
+        flex: 1;
+    }
+
+
+    footer {
+        text-align: center;
+        padding: 20px;
+    }
+
+
+    div.login {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 20px 0 20px 0;
+        background-color: darkblue;
+        padding: 0 10px;
+    }
+
+    .login p {
+        color: white;
+        text-align: center;
+        margin: 10px;
+    }
+
+    .login button {
+        text-decoration: none;
+        color: white;
+        text-align: center;
+        margin-right: 10px
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+
+    }
+    th {
+        background-color: #f2f2f2;
+        text-align: center;
+        padding: 8px;
+
+    }
+
+    td {
+        text-align: center;
+        padding: 8px;
+        border-bottom: 1px solid #ccc;
+    }
+
+    div.buttons {
+        display: flex;
+        align-items: center;
+
+    }
+
+    button {
+        background-color: darkblue;
+        color: #fff;
+        border: none;
+        padding: 6px 12px;
+        cursor: pointer;
+
+    }
+
+    button:hover {
+        background-color: #0056b3;
+
+    }
+
+    .buttons button:hover {
+        border: 1px solid white;
+        background-color: #0056b3;
+    }
+
+
+    .srodek {
+        margin: 10px auto 10px auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+</style>
+
+
+<div class="srodek">
+
+    <h2>Logi</h2>
+    <table>
+        <tr>
+            <th>Data i czas</th>
+            <th>Wiadomość</th>
+        </tr>
+        <tr th:each="log : ${logs}">
+            <td th:text="${log.dateTime}"></td>
+            <td th:text="${log.message}"></td>
+        </tr>
+    </table>
+
+</div>
+
+<footer>
+    <div class="login">
+        <p>Zalogowano jako: Admin</p>
+        <div class="buttons">
+            <button id="powrotButton">Powrot</button>
+        </div>
+    </div>
+</footer>
+
+<script>
+    document.getElementById('powrotButton').addEventListener('click', function() {
+        window.location.href = '/Szlachta';
+    });
+</script>
+
+</body>
+</html>

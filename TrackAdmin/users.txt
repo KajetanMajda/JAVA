@@ -1,0 +1,3 @@
+Admin,$2a$10$2mZO3U7Rio5kwfDT8LmVFOW2pfA7.Lv2IUdxUuRKSOUEBwgaAeqQy,true
+Kajetan,$2a$10$ayrbT2okKMaJus.OrERdFe26AbjK10fQ6T5pybV/JxkNe.PLtFg2m,true
+Kajetan Kajetan,$2a$10$leOIHTFYwdEvQhca9DoJVOP/QVFfryn8d5X2XZlL4IdbZXmQBVQea,false

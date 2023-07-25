@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Proxmus</title>
+</head>
+<body>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  .srodek{
+    flex: 1;
+  }
+
+  nav{
+    text-align: center;
+    padding: 20px;
+  }
+
+  .navbar{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: darkblue;
+
+  }
+  .navbar li{
+    float: left;
+  }
+
+  .navbar li select{
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    background-color: darkblue ;
+  }
+
+  .navbar li select:hover {
+    background-color: #111;
+  }
+
+  footer{
+    text-align: center;
+    padding: 20px;
+  }
+
+
+  div.login {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 0 20px 0;
+    background-color: darkblue;
+    padding: 0 10px;
+  }
+
+  .login p {
+    color: white;
+    text-align: center;
+    margin-left: 10px;
+  }
+
+  .login a {
+    text-decoration: none;
+    color: white;
+    text-align: center;
+    margin-right: 10px
+  }
+  .login  button {
+    background-color: darkblue;
+    color: #fff;
+    border: none;
+    padding: 6px 12px;
+    cursor: pointer;
+
+  }
+
+  .login button:hover {
+    border: 1px solid white;
+    background-color: #0056b3;
+  }
+</style>
+<nav>
+  <div>
+    <ul class="navbar">
+      <li><select id="marka" name="Nazwa">
+        <option value="" hidden>Wybierz marke</option>
+        <option value="audi">Audi</option>
+        <option value="bmw">BMW</option>
+      </select></li>
+
+      <li><select id="model" name="Nazwa2" >
+        <option value="" hidden>Wybierz model</option>
+      </select></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="srodek">
+  <table id="userTable">
+    <tr>
+      <th>LP</th>
+      <th>Operacja</th>
+      <th>Opis</th>
+      <th>Uwagi</th>
+      <th>Zrealizowe przez: </th>
+      <th>Data realizacji: </th>
+      <th>Zatwierdzone przez: </th>
+      <th>Data zatwierdzenia: </th>
+    </tr>
+  </table>
+</div>
+
+
+
+<footer>
+  <div class="login">
+    <p>Zalogowano jako: <span id="loggedInUser"></span></p>
+    <button id="logoutButton">Wyloguj się</button>
+  </div>
+</footer>
+
+
+
+<script>
+  document.getElementById('logoutButton').addEventListener('click', function() {
+    window.location.href = '/auth';
+  });
+
+  document.addEventListener('DOMContentLoaded', function() {
+    var loggedInUser = getCookieValue('loggedInUser');
+    document.getElementById('loggedInUser').innerText = loggedInUser || '';
+  });
+
+  function getCookieValue(name) {
+    var value = '; ' + document.cookie;
+    var parts = value.split('; ' + name + '=');
+    if (parts.length === 2) return parts.pop().split(';').shift();
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const markaSelect = document.getElementById('marka');
+    const modelSelect = document.getElementById('model');
+
+
+    markaSelect.addEventListener('change', () => {
+      const selectedMarka = markaSelect.value;
+      updateModelOptions(selectedMarka);
+    });
+
+
+    function updateModelOptions(selectedMarka) {
+      modelSelect.innerHTML = '<option value="" hidden>Wybierz model</option>';
+
+      if (selectedMarka === 'audi') {
+        addOption(modelSelect, 'A3');
+        addOption(modelSelect, 'A4');
+        addOption(modelSelect, 'A6');
+      } else if (selectedMarka === 'bmw') {
+        addOption(modelSelect, 'Seria 1');
+        addOption(modelSelect, 'Seria 3');
+        addOption(modelSelect, 'Seria 5');
+      }
+    }
+
+
+    function addOption(selectElement, text) {
+      const option = document.createElement('option');
+      option.textContent = text;
+      option.value = text.toLowerCase().replace(/\s/g, '');
+      selectElement.appendChild(option);
+    }
+  });
+</script>
+</body>
+</html>

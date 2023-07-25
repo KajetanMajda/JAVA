@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Logowanie/Rejestracja</title>
+</head>
+<body>
+
+<style>
+
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
+    text-align: center;
+    padding-top: 50px;
+  }
+
+  h2 {
+    color: #333;
+  }
+
+  form {
+    margin-top: 20px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 20px;
+    display: inline-block;
+    border-radius: 5px;
+    text-align: left;
+    width: 300px;
+  }
+
+  label{
+    float: left;
+    margin-bottom: 5px;
+  }
+
+  .label {
+    float: left;
+    display: block;
+    clear: none;
+    margin-bottom: 5px;
+    padding: 0px 1em 0px 8px;
+  }
+
+  input[type="radio"] {
+    clear: none;
+    float: left;
+    padding: 15px;
+    margin: 2px 0 0 2px;
+  }
+
+  #password, #username{
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    width: 95%;
+  }
+
+  button[type="submit"] {
+    padding: 10px 20px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+  }
+
+  button[type="submit"]:hover {
+    background-color: green;
+  }
+
+  p {
+    margin-top: 10px;
+    color: #666;
+  }
+
+  .buttonHolder{
+    display: flex;
+    justify-content: center;
+  }
+
+</style>
+
+<h2>Logowanie | Rejestracja</h2>
+<form action="/auth" method="post">
+  <input type="radio" id="login" name="action" value="login" checked onchange="handleRegistrationRadio()">
+  <label class="label" for="login">Logowanie</label>
+  <input type="radio" id="register" name="action" value="register" onchange="handleRegistrationRadio()">
+  <label class="label" for="register">Rejestracja</label><br><br>
+  <label for="username">Imię Nazwisko:</label>
+  <input id="username" name="username"><br>
+  <label for="password">Hasło:</label>
+  <input type="password" id="password" name="password" ><br>
+  <div class="buttonHolder">
+    <button type="submit">Submit</button>
+  </div>
+</form>
+<p th:if="${loginError}">Nieprawidłowa nazwa użytkownika lub hasło.</p>
+<p th:if="${registrationError}">Wystąpił błąd podczas rejestracji lub nazwa użytkownika już istnieje.</p>
+<p th:if="${registrationSuccess}">Rejestracja zakończona sukcesem! Możesz teraz się zalogować.</p>
+<p th:if="${loginSuccess}">Zalogowano pomyślnie!</p>
+
+<script>
+  function handleRegistrationRadio(qualifiedName) {
+    var registerRadio = document.getElementById("register");
+    var loginRadio = document.getElementById("login");
+    var usernameInput = document.getElementById("username");
+    var passwordInput = document.getElementById("password");
+    var placeholderLogin = "Imie Nazwisko";
+    var placeholderPassword = "!AlaMaKota17";
+
+    if (registerRadio.checked) {
+
+      usernameInput.setAttribute("required", "");
+      usernameInput.setAttribute("placeholder", placeholderLogin);
+      usernameInput.setAttribute("pattern", "^[A-Z][a-z]+ [A-Z][a-z]+$");
+      usernameInput.setAttribute("title", "Imie i nazwisko ma się zaczynać wielką literą. Wyrazy mają być oddzielone znakiem spacji");
+      usernameInput.value = "";
+
+      passwordInput.setAttribute("required", "");
+      passwordInput.setAttribute("placeholder", placeholderPassword);
+      passwordInput.setAttribute("pattern", "(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,}");
+      passwordInput.setAttribute("title", "Musi zawierać małe i duże litery, cyfrę, znak specjalny oraz musi mieć 8 lub więcej znaków");
+      passwordInput.value = "";
+
+    } else if(loginRadio.checked) {
+
+      usernameInput.value = "";
+      usernameInput.removeAttribute("required");
+      usernameInput.removeAttribute("placeholder");
+      usernameInput.removeAttribute("pattern");
+      usernameInput.removeAttribute("title");
+
+      passwordInput.value = "";
+      passwordInput.removeAttribute("class");
+      passwordInput.removeAttribute("required");
+      passwordInput.removeAttribute("placeholder");
+      passwordInput.removeAttribute("pattern");
+      passwordInput.removeAttribute("title");
+    }
+  }
+</script>
+</body>
+</html>
