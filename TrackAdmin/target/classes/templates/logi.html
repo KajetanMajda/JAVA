@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="logi.css">
+    <meta charset="UTF-8">
+    <title>Proxmus</title>
+</head>
+<body>
+
+
+<div class="srodek">
+
+    <h2>Logi</h2>
+    <table>
+        <tr>
+            <th>Data i czas</th>
+            <th>Wiadomość</th>
+        </tr>
+        <tr th:each="log : ${logs}">
+            <td th:text="${log.dateTime}"></td>
+            <td th:text="${log.message}"></td>
+        </tr>
+    </table>
+
+</div>
+
+<footer>
+    <div class="login">
+        <p>Zalogowano jako: Admin</p>
+        <div class="buttons">
+            <button id="powrotButton">Powrot</button>
+        </div>
+    </div>
+</footer>
+
+<script type="text/javascript" src="logi.js"></script>
+
+</body>
+</html>
