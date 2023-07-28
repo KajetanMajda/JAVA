@@ -36,23 +36,23 @@ public class UsersController {
         UsersRole usersRole = usersRoleRepository.findByName(role);
 
 
-        Users user = new Users();
-        user.setName(name);
-        user.setSurname(surname);
-        user.setEmail(email);
-        user.setPassword(passwordEncoder.encode(password));
-        user.setRole(usersRole);
-        usersRole.getUsers().add(user);
+        Users userAdd = new Users();
+        userAdd.setName(name);
+        userAdd.setSurname(surname);
+        userAdd.setEmail(email);
+        userAdd.setPassword(passwordEncoder.encode(password));
+        userAdd.setRole(usersRole);
+        usersRole.getUsers().add(userAdd);
 
-        usersRepository.save(user);
+        usersRepository.save(userAdd);
         return "Saved";
     }
 
     @PostMapping(path = "/login")
     public @ResponseBody String login(@RequestParam String email,
                                       @RequestParam String password) {
-        Users user = usersRepository.findByEmail(email);
-        if (user != null && passwordEncoder.matches(password, user.getPassword())) {
+        Users userLogin = usersRepository.findByEmail(email);
+        if (userLogin != null && passwordEncoder.matches(password, userLogin.getPassword())) {
             return "Zalogowano";
         } else {
             return "Błędny email lub hasło";
@@ -62,9 +62,9 @@ public class UsersController {
     @PostMapping(path="/checkRole")
     public @ResponseBody Boolean checkUserRole(@RequestParam String email,
                                                @RequestParam String role){
-        Users user = usersRepository.findByEmail(email);
-        if(user != null && user.getRole() != null){
-            return user.getRole().getName().equals(role);
+        Users userCheckRole = usersRepository.findByEmail(email);
+        if(userCheckRole != null && userCheckRole.getRole() != null){
+            return userCheckRole.getRole().getName().equals(role);
         }else{
             return false;
         }
@@ -72,9 +72,9 @@ public class UsersController {
 
     @DeleteMapping(path = "/delete")
     public @ResponseBody String deleteUser(@RequestParam String email){
-        Users user = usersRepository.findByEmail(email);
-        if(user != null){
-            usersRepository.delete(user);
+        Users userDelete = usersRepository.findByEmail(email);
+        if(userDelete != null){
+            usersRepository.delete(userDelete);
             return "Usunięto konto -> " + email;
         }
         else{
@@ -100,25 +100,25 @@ public class UsersController {
                                            @RequestParam(required = false) String email,
                                            @RequestParam(required = false) String password,
                                            @RequestParam(required = false) UsersRole role) {
-        Users user = usersRepository.findById(id).orElse(null);
-        if (user != null) {
+        Users userUpdate = usersRepository.findById(id).orElse(null);
+        if (userUpdate != null) {
             if (name != null) {
-                user.setName(name);
+                userUpdate.setName(name);
             }
             if (surname != null) {
-                user.setSurname(surname);
+                userUpdate.setSurname(surname);
             }
             if (email != null) {
-                user.setEmail(email);
+                userUpdate.setEmail(email);
             }
             if (password != null) {
-                user.setPassword(passwordEncoder.encode(password));
+                userUpdate.setPassword(passwordEncoder.encode(password));
             }
             if (role != null) {
-                user.setRole(role);
+                userUpdate.setRole(role);
             }
 
-            usersRepository.save(user);
+            usersRepository.save(userUpdate);
 
             return "Zaktualizowano użytkownika o ID: " + id;
         }else{

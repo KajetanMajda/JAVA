@@ -15,12 +15,34 @@ public class UsersRoleController {
 
     @PostMapping(path = "/add")
     public @ResponseBody String addNewUsersRole(@RequestParam String name){
-        UsersRole usersRole = new UsersRole();
+        UsersRole usersRoleAdd = new UsersRole();
 
-        usersRole.setName(name);
-        usersRoleRepository.save(usersRole);
+        usersRoleAdd.setName(name);
+        usersRoleRepository.save(usersRoleAdd);
         return "Saved";
+    }
 
+    @DeleteMapping(path = "/delete")
+    public @ResponseBody String deleteUserRole(@RequestParam String name){
+        UsersRole usersRoleDelete = usersRoleRepository.findByName(name);
+        if(usersRoleDelete != null){
+            usersRoleRepository.delete(usersRoleDelete);
+            return "Rola o nazwie: " + name + " zostala usunieta";
+        }else{
+            return "Rola o nazwie: " + name + " nie istenieje";
+        }
+    }
+
+    @PutMapping(path = "/update")
+    public @ResponseBody String updateUserRole(@RequestParam Integer id,
+                                               @RequestParam String name){
+        UsersRole usersRoleUpdate = usersRoleRepository.findById(id).orElse(null); //Nie wywala bledu, ale nie zmnienia nazwy na podana
+        if(usersRoleUpdate != null){
+            usersRoleUpdate.setName(name);
+            return "Zmieniono nazwe roli na: " + name;
+        }else {
+            return "Pod Id: " + id + " nie zostala utworzona wczesniej rola, najpierw utworz role userRole/add, by moc ja edytowac";
+        }
     }
 
     @GetMapping(path = "/all")

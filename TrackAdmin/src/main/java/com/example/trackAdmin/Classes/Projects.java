@@ -18,5 +18,4 @@ public class Projects {
     @JoinColumn(name = "division_id")
     private Division division;
 
-    // Możesz dodać inne pola i relacje, jeśli są wymagane
 }

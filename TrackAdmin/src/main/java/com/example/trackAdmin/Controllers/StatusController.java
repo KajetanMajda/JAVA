@@ -21,6 +21,30 @@ public class StatusController {
         return "Saved";
     }
 
+    @DeleteMapping(path = "/delete")
+    public @ResponseBody String deleteStatus(@RequestParam String name){
+        Status deleteStatus = statusRepository.findByName(name);
+        if(deleteStatus != null){
+            statusRepository.delete(deleteStatus);
+            return "Status o nazwie: " + name + " zostal usuniety";
+        }else{
+            return "Nie udalo sie";
+        }
+
+    }
+
+    @PutMapping(path = "/update")
+    public @ResponseBody String updateStatus(@RequestParam Integer id,
+                                             @RequestParam(required = false) String name){
+        Status updateStatus = statusRepository.findById(id).orElse(null);
+         if(updateStatus != null){
+             updateStatus.setName(name);
+             return "Udalo sie";
+         }else {
+             return "Nie udalo sie";
+         }
+    }
+
     @GetMapping(path = "/all")
     public @ResponseBody Iterable<Status> getAllDivisions() {
         return statusRepository.findAll();
