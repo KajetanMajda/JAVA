@@ -39,6 +39,7 @@ public class UsersRoleController {
         UsersRole usersRoleUpdate = usersRoleRepository.findById(id).orElse(null); //Nie wywala bledu, ale nie zmnienia nazwy na podana
         if(usersRoleUpdate != null){
             usersRoleUpdate.setName(name);
+            usersRoleRepository.save(usersRoleUpdate);
             return "Zmieniono nazwe roli na: " + name;
         }else {
             return "Pod Id: " + id + " nie zostala utworzona wczesniej rola, najpierw utworz role userRole/add, by moc ja edytowac";

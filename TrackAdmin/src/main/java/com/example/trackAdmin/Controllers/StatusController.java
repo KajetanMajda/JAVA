@@ -39,6 +39,7 @@ public class StatusController {
         Status updateStatus = statusRepository.findById(id).orElse(null);
          if(updateStatus != null){
              updateStatus.setName(name);
+             statusRepository.save(updateStatus);
              return "Udalo sie";
          }else {
              return "Nie udalo sie";
