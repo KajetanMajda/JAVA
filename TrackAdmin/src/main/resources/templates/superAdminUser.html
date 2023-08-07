@@ -10,10 +10,10 @@
 
 <div class="navbar">
     <div class="navbar-left">
-        <p>Witaj, Admin!</p>
+        <p>Zalogowany użytkownik: <span id="loggedInUserEmail" th:text="${loggedInUserEmail}"></span></p>
     </div>
     <div class="navbar-right">
-        <button id="logoutButton" onclick="logout()">Wyloguj</button>
+        <button id="logoutButton">Wyloguj</button>
     </div>
 </div>
 <div class="firstCol">
@@ -231,23 +231,19 @@
 </div>
 
 <div class="footer">
-    <p>Tutaj admini i super admini beda mogli dodac rzeczy do elementu? IDK</p>
+    <p>EEEE nie wiem co tutaj bedzie</p>
 </div>
 </body>
-    <script>
-        function logout() {
-            window.location.href = "/user/login";
-        }
-    </script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script type="text/javascript" src="/JS/superAdminUser/User/updateRole.js"></script>
-    <script type="text/javascript" src="/JS/superAdminUser/User/updateUser.js"></script>
-    <script type="text/javascript" src="/JS/superAdminUser/User/deleteUser.js"></script>
-    <script type="text/javascript" src="/JS/superAdminUser/User/addUser.js"></script>
-    <script type="text/javascript" src="/JS/superAdminUser/userList.js"></script>
-    <script type="text/javascript" src="/JS/superAdminUser/roles.js"></script>
-    <script type="text/javascript" src="/JS/superAdminUser/statuses.js"></script>
-    <script type="text/javascript" src="/JS/superAdminUser/projects.js"></script>
-    <script type="text/javascript" src="/JS/superAdminUser/divisions.js"></script>
-    <script type="text/javascript" src="/JS/superAdminUser/elements.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript" src="/JS/login/login.js"></script>
+<script type="text/javascript" src="/JS/superAdminUser/User/updateRole.js"></script>
+<script type="text/javascript" src="/JS/superAdminUser/User/updateUser.js"></script>
+<script type="text/javascript" src="/JS/superAdminUser/User/deleteUser.js"></script>
+<script type="text/javascript" src="/JS/superAdminUser/User/addUser.js"></script>
+<script type="text/javascript" src="/JS/superAdminUser/userList.js"></script>
+<script type="text/javascript" src="/JS/superAdminUser/roles.js"></script>
+<script type="text/javascript" src="/JS/superAdminUser/statuses.js"></script>
+<script type="text/javascript" src="/JS/superAdminUser/projects.js"></script>
+<script type="text/javascript" src="/JS/superAdminUser/divisions.js"></script>
+<script type="text/javascript" src="/JS/superAdminUser/elements.js"></script>
 </html>

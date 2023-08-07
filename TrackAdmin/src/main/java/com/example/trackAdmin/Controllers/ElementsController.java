@@ -4,6 +4,8 @@ import com.example.trackAdmin.Classes.*;
 import com.example.trackAdmin.Respositories.DivisionRepository;
 import com.example.trackAdmin.Respositories.ElementsRepository;
 import com.example.trackAdmin.Respositories.StatusRepository;
+import com.example.trackAdmin.Service.AuditLogService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
@@ -22,6 +24,9 @@ public class ElementsController {
 
     @Autowired
     private DivisionRepository divisionRepository;
+
+    @Autowired
+    private AuditLogService auditLogService;
 
     @PostMapping(path = "/add")
     public @ResponseBody String addNewElement(@RequestParam String transaction,
@@ -67,7 +72,8 @@ public class ElementsController {
                                            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate accomplish_date,
                                            @RequestParam(required = false) String confirm,
                                            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate confirm_date,
-                                           @RequestParam(required = false) Integer divisionId) {
+                                           @RequestParam(required = false) Integer divisionId,
+                                           HttpSession session) {
         Elements elementsUpdate = elementsRepository.findById(id).orElse(null);
         if (elementsUpdate != null) {
             if (transaction != null) {
@@ -106,6 +112,9 @@ public class ElementsController {
                     elementsUpdate.setDivision(division);
                 }
             }
+
+            String loggedInUserEmail = (String) session.getAttribute("loggedInUserEmail");
+            auditLogService.logElementUpdate(loggedInUserEmail, id); // Dodaj id elementu
             elementsRepository.save(elementsUpdate);
             return "Zaktualizowano element o ID: " + id;
         } else {

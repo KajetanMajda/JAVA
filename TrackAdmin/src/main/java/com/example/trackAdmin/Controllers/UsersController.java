@@ -4,19 +4,22 @@ import com.example.trackAdmin.Classes.Users;
 import com.example.trackAdmin.Respositories.UsersRepository;
 import com.example.trackAdmin.Classes.UsersRole;
 import com.example.trackAdmin.Respositories.UsersRoleRepository;
+import com.example.trackAdmin.Service.AuditLogService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 
 @Controller
-@RequestMapping(path= "/user")
+@RequestMapping(path = "/user")
 public class UsersController {
     @Autowired
     private UsersRepository usersRepository;
@@ -27,35 +30,18 @@ public class UsersController {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
+    @Autowired
+    private AuditLogService auditLogService;
 
-//    @PostMapping(path = "/add")
-//    public @ResponseBody String addNewUser(@RequestParam String name,
-//                                           @RequestParam String surname,
-//                                           @RequestParam String email,
-//                                           @RequestParam String password,
-//                                           @RequestParam String role) {
-//
-//        UsersRole usersRole = usersRoleRepository.findByName(role);
-//
-//
-//        Users userAdd = new Users();
-//        userAdd.setName(name);
-//        userAdd.setSurname(surname);
-//        userAdd.setEmail(email);
-//        userAdd.setPassword(passwordEncoder.encode(password));
-//        userAdd.setRole(usersRole);
-//        usersRole.getUsers().add(userAdd);
-//
-//        usersRepository.save(userAdd);
-//        return "redirect:/user/superAdminUser";
-//    }
+
 
     @PostMapping(path = "/add")
     public @ResponseBody String addNewUser(@RequestParam String name,
                                            @RequestParam String surname,
                                            @RequestParam String email,
                                            @RequestParam String password,
-                                           @RequestParam String role) {
+                                           @RequestParam String role,
+                                           HttpSession session) {
 
         UsersRole usersRole = usersRoleRepository.findByName(role);
 
@@ -71,6 +57,8 @@ public class UsersController {
         userAdd.setRole(usersRole);
         usersRole.getUsers().add(userAdd);
 
+        String loggedInUserEmail = (String) session.getAttribute("loggedInUserEmail");
+        auditLogService.logUserAdd(loggedInUserEmail, name, surname);
         usersRepository.save(userAdd);
         return "redirect:/user/superAdminUser";
     }
@@ -87,10 +75,10 @@ public class UsersController {
                         HttpSession session) {
         Users userLogin = usersRepository.findByEmail(email);
         if (userLogin != null && passwordEncoder.matches(password, userLogin.getPassword())) {
-            // Ustaw informacje o zalogowanym użytkowniku w sesji
             session.setAttribute("loggedInUser", userLogin);
 
-            // Przekieruj użytkownika na odpowiednią stronę w zależności od jego roli
+            session.setAttribute("loggedInUserEmail", email);
+
             if (userLogin.getRole() != null) {
                 switch (userLogin.getRole().getName()) {
                     case "Super_Admin_User":
@@ -102,23 +90,16 @@ public class UsersController {
                 }
             }
         }
-
         return "redirect:/error";
     }
 
+
     @GetMapping(path = "/normalUser")
-    public String normalUserPage() {
+    public String normalUserPage(Model model, HttpSession session) {
+        String loggedInUserEmail = (String) session.getAttribute("loggedInUserEmail");
+        model.addAttribute("loggedInUserEmail", loggedInUserEmail);
+//        auditLogService.logUserLogin(loggedInUserEmail);
         return "normalUser";
-    }
-
-    @GetMapping(path = "/adminUser")
-    public String adminUserPage() {
-        return "adminUser";
-    }
-
-    @GetMapping(path = "/superAdminUser")
-    public String superAdminUserPage() {
-        return "superAdminUser";
     }
 
     @GetMapping(path = "/login")
@@ -126,41 +107,90 @@ public class UsersController {
         return "login";
     }
 
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        String loggedInUserEmail = (String) session.getAttribute("loggedInUserEmail");
+//        auditLogService.logUserLogout(loggedInUserEmail);
+        session.removeAttribute("loggedInUserEmail");
+        return "redirect:/user/login";
+    }
+
+    @GetMapping(path = "/adminUser")
+    public String adminUserPage(Model model, HttpSession session) {
+        String loggedInUserEmail = (String) session.getAttribute("loggedInUserEmail");
+        model.addAttribute("loggedInUserEmail", loggedInUserEmail);
+//        auditLogService.logUserLogin(loggedInUserEmail);
+        return "adminUser";
+    }
+
+    @GetMapping(path = "/superAdminUser")
+    public String superAdminUserPage(Model model, HttpSession session) {
+        String loggedInUserEmail = (String) session.getAttribute("loggedInUserEmail");
+        model.addAttribute("loggedInUserEmail", loggedInUserEmail);
+//        auditLogService.logUserLogin(loggedInUserEmail);
+        return "superAdminUser";
+    }
+
+
     @GetMapping(path = "/error")
     public String errorPage() {
         return "error";
     }
 
 
+//    @PostMapping(path = "/updateRole")
+//    public String updateRole(@RequestParam("emailRole") String email,
+//                             @RequestParam("newRole") String newRole,
+//                             RedirectAttributes redirectAttributes,
+//                             HttpSession session) {
+//        Users userToUpdate = usersRepository.findByEmail(email);
+//        if (userToUpdate != null) {
+//            UsersRole newUsersRole = usersRoleRepository.findByName(newRole);
+//            if (newUsersRole == null) {
+//                redirectAttributes.addFlashAttribute("error", "Invalid role");
+//            } else {
+//                String loggedInUserEmail = (String) session.getAttribute("loggedInUserEmail");
+//                auditLogService.logUpdateRole(loggedInUserEmail, userToUpdate.getName(), userToUpdate.getSurname());
+//                usersRepository.save(userToUpdate);
+//                redirectAttributes.addFlashAttribute("success", "Updated role for user with email: " + email);
+//            }
+//        } else {
+//            redirectAttributes.addFlashAttribute("error", "User with email: " + email + " not found");
+//        }
+//        return "redirect:/user/superAdminUser";
+//    }
+
     @PostMapping(path = "/updateRole")
     public String updateRole(@RequestParam("emailRole") String email,
                              @RequestParam("newRole") String newRole,
-                             RedirectAttributes redirectAttributes) {
+                             HttpSession session) {
         Users userToUpdate = usersRepository.findByEmail(email);
         if (userToUpdate != null) {
             UsersRole newUsersRole = usersRoleRepository.findByName(newRole);
-            if (newUsersRole == null) {
-                redirectAttributes.addFlashAttribute("error", "Invalid role");
-            } else {
+            if (newUsersRole != null) {
+                String loggedInUserEmail = (String) session.getAttribute("loggedInUserEmail");
+                auditLogService.logUpdateRole(loggedInUserEmail, userToUpdate.getName(), userToUpdate.getSurname());
                 userToUpdate.setRole(newUsersRole);
                 usersRepository.save(userToUpdate);
-                redirectAttributes.addFlashAttribute("success", "Updated role for user with email: " + email);
             }
-        } else {
-            redirectAttributes.addFlashAttribute("error", "User with email: " + email + " not found");
         }
         return "redirect:/user/superAdminUser";
     }
 
 
     @DeleteMapping(path = "/delete")
-    public @ResponseBody String deleteUser(@RequestParam String email){
+    public @ResponseBody String deleteUser(@RequestParam String email,
+                                           @RequestParam String name,
+                                           @RequestParam String surname,
+                                           HttpSession session) {
         Users userDelete = usersRepository.findByEmail(email);
-        if(userDelete != null){
+        if (userDelete != null) {
+            String loggedInUserEmail = (String) session.getAttribute("loggedInUserEmail");
+            auditLogService.logDeleteUser(loggedInUserEmail, name, surname);
             usersRepository.delete(userDelete);
             return "redirect:/user/superAdminUser";
-        }
-        else{
+        } else {
             return "redirect:/error";
         }
     }
@@ -171,7 +201,8 @@ public class UsersController {
                                            @RequestParam(required = false) String name,
                                            @RequestParam(required = false) String surname,
                                            @RequestParam(required = false) String email,
-                                           @RequestParam(required = false) String password) {
+                                           @RequestParam(required = false) String password,
+                                           HttpSession session) {
         Users userUpdate = usersRepository.findById(id).orElse(null);
         if (userUpdate != null) {
             if (name != null) {
@@ -186,6 +217,8 @@ public class UsersController {
             if (password != null) {
                 userUpdate.setPassword(passwordEncoder.encode(password));
             }
+            String loggedInUserEmail = (String) session.getAttribute("loggedInUserEmail");
+            auditLogService.logUpdateUser(loggedInUserEmail, name, surname);
             usersRepository.save(userUpdate);
 
             return "redirect:/user/superAdminUser";
@@ -195,7 +228,7 @@ public class UsersController {
         }
     }
 
-    @GetMapping(path="/all")
+    @GetMapping(path = "/all")
     public @ResponseBody Iterable<Users> getAllUsers() {
         return usersRepository.findAll();
     }

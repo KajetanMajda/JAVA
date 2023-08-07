@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function() {
     const elementsListDiv = document.querySelector('.elementsList');
     const elementDetailsDiv = document.querySelector('.elementDetails');
 
@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 const headerRow = elementsTable.insertRow();
                 const headerColumns = ['Lp', 'Dział', 'Operacja', 'Opis', 'Uwagi', 'Status', 'Zrealizowane przez',
-                    'Data realizacji', 'Zatwierdzone przez ', 'Data zatwierdzenia', 'Zaktualizuj'];
+                    'Data realizacji', 'Zatwierdzone przez ', 'Data zatwierdzenia','Zaktualizuj'];
                 headerColumns.forEach(column => {
                     const th = document.createElement('th');
                     th.textContent = column;
@@ -35,19 +35,36 @@ document.addEventListener("DOMContentLoaded", function () {
                         const actionsCell = row.insertCell();
 
                         idCell.textContent = element.id;
-                        transactionCell.textContent = element.transaction;
-                        descriptionCell.textContent = element.description;
-                        commentCell.textContent = element.comment;
-
+                        transactionCell.innerHTML =`<input class="input-transaction" type="text" value="${element.transaction || ''}">`
+                        descriptionCell.innerHTML =`<textarea class="textarea-description">${element.description || ''}</textarea>`
+                        commentCell.innerHTML =`<textarea class="textarea-comment">${element.comment || ''}</textarea>`
                         divisionCell.textContent = element.division.name;
 
-                        fetchStatusName(element.status.id)
-                            .then(statusName => {
-                                statusCell.textContent = statusName;
+
+
+
+                        const statusSelect = document.createElement("select");
+                        statusSelect.classList.add("input-status");
+                        statusCell.appendChild(statusSelect);
+
+                        // Pobierz i dodaj opcje statusów do rozwijanej listy
+                        fetch("/status/all")
+                            .then(response => response.json())
+                            .then(statuses => {
+                                statuses.forEach(status => {
+                                    const option = document.createElement("option");
+                                    option.value = status.id;
+                                    option.textContent = status.name;
+                                    statusSelect.appendChild(option);
+                                });
+
+                                // Ustaw początkowy wybór statusu
+                                statusSelect.value = element.status.id;
                             })
                             .catch(error => {
-                                console.error("Błąd pobierania nazwy statusu:", error);
+                                console.error("Błąd pobierania statusów:", error);
                             });
+                        statusCell.appendChild(statusSelect);
 
                         accomplishCell.innerHTML = `<input class="input-accomplish" type="text" value="${element.accomplish || ''}">`;
                         accomplishDateCell.innerHTML = `<input class="input-accomplish-date" type="date" value="${element.accomplish_date || ''}">`;
@@ -77,7 +94,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const dzialSelect = document.getElementById("dzial");
 
     // Reakcja na zmianę wybranego działu
-    dzialSelect.addEventListener("change", function () {
+    dzialSelect.addEventListener("change", function() {
         var selectedOption = dzialSelect.options[dzialSelect.selectedIndex];
         var selectedDzialId = selectedOption.value;
 
@@ -100,7 +117,7 @@ document.addEventListener("DOMContentLoaded", function () {
             });
     }
 
-    elementsListDiv.addEventListener('click', function (event) {
+    elementsListDiv.addEventListener('click', function(event) {
         if (event.target.parentElement.classList.contains('elementRow')) {
             const selectedId = event.target.parentElement.cells[0].textContent;
 
@@ -115,7 +132,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    elementsListDiv.addEventListener('click', function (event) {
+    elementsListDiv.addEventListener('click', function(event) {
         if (event.target.classList.contains('save-button')) {
             const row = event.target.parentElement.parentElement;
             const id = row.cells[0].textContent;
@@ -124,13 +141,22 @@ document.addEventListener("DOMContentLoaded", function () {
             const isConfirmed = window.confirm(confirmMessages);
 
             if (isConfirmed) {
+
+                const inputTransaction = row.querySelector('.input-transaction');
+                const textareaDescription = row.querySelector('.textarea-description');
+                const textareaComment = row.querySelector('.textarea-comment');
+                const inputStatus = row.querySelector('.input-status');
                 const inputAccomplish = row.querySelector('.input-accomplish');
                 const inputAccomplishDate = row.querySelector('.input-accomplish-date');
-                const inputConfirmName = row.querySelector('.input-confirm-name'); // Poprawiona nazwa zmiennej
+                const inputConfirmName = row.querySelector('.input-confirm-name');
                 const inputConfirmDate = row.querySelector('.input-confirm-date');
                 const formData = new URLSearchParams();
 
                 formData.append('id', id);
+                formData.append('transaction', inputTransaction.value);
+                formData.append('description', textareaDescription.value);
+                formData.append('comment', textareaComment.value);
+                formData.append('statusId', inputStatus.value);
                 formData.append('accomplish', inputAccomplish.value);
                 formData.append('accomplish_date', inputAccomplishDate.value);
                 formData.append('confirm_name', inputConfirmName.value);

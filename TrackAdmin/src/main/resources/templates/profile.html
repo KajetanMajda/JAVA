@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <!-- Twój kod nagłówka -->
+</head>
+<body>
+<div>
+  <!-- Wyświetlenie zmienną w elemencie HTML -->
+  <p>Zalogowany użytkownik: <span id="loggedInUserEmail" th:text="${loggedInUserEmail}"></span></p>
+</div>
+
+<!-- Twój kod JS -->
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const loggedInUserEmail = document.getElementById("loggedInUserEmail").textContent;
+    console.log("Zalogowany użytkownik:", loggedInUserEmail);
+
+    // Inny kod JS
+  });
+</script>
+</body>
+</html>
