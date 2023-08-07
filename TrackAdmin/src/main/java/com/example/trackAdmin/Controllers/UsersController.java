@@ -4,7 +4,6 @@ import com.example.trackAdmin.Classes.Users;
 import com.example.trackAdmin.Respositories.UsersRepository;
 import com.example.trackAdmin.Classes.UsersRole;
 import com.example.trackAdmin.Respositories.UsersRoleRepository;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -55,7 +54,7 @@ public class UsersController {
     public @ResponseBody String addNewUser(@RequestParam String name,
                                            @RequestParam String surname,
                                            @RequestParam String email,
-                                           @RequestParam(required = false) String password,
+                                           @RequestParam String password,
                                            @RequestParam String role) {
 
         UsersRole usersRole = usersRoleRepository.findByName(role);

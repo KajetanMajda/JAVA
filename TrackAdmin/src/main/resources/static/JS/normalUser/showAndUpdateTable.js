@@ -2,69 +2,102 @@ document.addEventListener("DOMContentLoaded", function() {
     const elementsListDiv = document.querySelector('.elementsList');
     const elementDetailsDiv = document.querySelector('.elementDetails');
 
-    fetch('/elements/all')
-        .then(response => response.json())
-        .then(data => {
-            const elementsTable = document.createElement('table');
-            elementsTable.classList.add('elementsTable');
+    // Funkcja do pobierania i wyświetlania wszystkich elementów lub elementów z wybranej dywizji
+    function fetchAndDisplayElements(divisionId = null) {
+        fetch('/elements/all')
+            .then(response => response.json())
+            .then(data => {
+                const elementsTable = document.createElement('table');
+                elementsTable.classList.add('elementsTable');
 
-            const headerRow = elementsTable.insertRow();
-            const headerColumns = ['Lp', 'Dział', 'Operacja', 'Opis', 'Uwagi', 'Status', 'Zrealizowane przez',
-                'Data realizacji', 'Zatwierdzone przez ', 'Data zatwierdzenia','Zaktualizuj'];
-            headerColumns.forEach(column => {
-                const th = document.createElement('th');
-                th.textContent = column;
-                headerRow.appendChild(th);
+                const headerRow = elementsTable.insertRow();
+                const headerColumns = ['Lp', 'Dział', 'Operacja', 'Opis', 'Uwagi', 'Status', 'Zrealizowane przez',
+                    'Data realizacji', 'Zatwierdzone przez ', 'Data zatwierdzenia','Zaktualizuj'];
+                headerColumns.forEach(column => {
+                    const th = document.createElement('th');
+                    th.textContent = column;
+                    headerRow.appendChild(th);
+                });
+
+                data.forEach((element) => {
+                    if (!divisionId || element.division.id == divisionId) {
+                        const row = elementsTable.insertRow();
+                        const idCell = row.insertCell();
+                        const divisionCell = row.insertCell();
+                        const transactionCell = row.insertCell();
+                        const descriptionCell = row.insertCell();
+                        const commentCell = row.insertCell();
+                        const statusCell = row.insertCell();
+                        const accomplishCell = row.insertCell();
+                        const accomplishDateCell = row.insertCell();
+                        const confirm_nameCell = row.insertCell();
+                        const confirmDateCell = row.insertCell();
+                        const actionsCell = row.insertCell();
+
+                        idCell.textContent = element.id;
+                        transactionCell.textContent = element.transaction;
+                        descriptionCell.textContent = element.description;
+                        commentCell.textContent = element.comment;
+
+                        divisionCell.textContent = element.division.name;
+
+                        fetchStatusName(element.status.id)
+                            .then(statusName => {
+                                statusCell.textContent = statusName;
+                            })
+                            .catch(error => {
+                                console.error("Błąd pobierania nazwy statusu:", error);
+                            });
+
+                        accomplishCell.innerHTML = `<input class="input-accomplish" type="text" value="${element.accomplish || ''}">`;
+                        accomplishDateCell.innerHTML = `<input class="input-accomplish-date" type="date" value="${element.accomplish_date || ''}">`;
+                        confirm_nameCell.innerHTML = `<input class="input-confirm-name" type="text" value="${element.confirm_name || ''}">`;
+                        confirmDateCell.innerHTML = `<input class="input-confirm-date" type="date" value="${element.confirm_date || ''}">`;
+
+                        const saveButton = document.createElement('button');
+                        saveButton.textContent = 'Zapisz';
+                        saveButton.classList.add('save-button');
+                        actionsCell.appendChild(saveButton);
+
+                        row.classList.add('elementRow');
+                        elementsTable.appendChild(row);
+                    }
+                });
+
+                elementsListDiv.innerHTML = ''; // Wyczyść zawartość przed dodaniem nowej tabeli
+                elementsListDiv.appendChild(elementsTable);
+            })
+            .catch(error => {
+                console.error('Błąd pobierania elementów:', error);
             });
+    }
 
-            data.forEach((element) => {
-                const row = elementsTable.insertRow();
-                const idCell = row.insertCell();
-                const divisionCell = row.insertCell();
-                const transactionCell = row.insertCell();
-                const descriptionCell = row.insertCell();
-                const commentCell = row.insertCell();
-                const statusCell = row.insertCell();
-                const accomplishCell = row.insertCell();
-                const accomplishDateCell = row.insertCell();
-                const confirm_nameCell = row.insertCell();
-                const confirmDateCell = row.insertCell();
-                const actionsCell = row.insertCell();
+    // Wywołanie funkcji przy starcie strony
+    fetchAndDisplayElements();
+    const dzialSelect = document.getElementById("dzial");
 
-                idCell.textContent = element.id;
-                transactionCell.textContent = element.transaction;
-                descriptionCell.textContent = element.description;
-                commentCell.textContent = element.comment;
+    // Reakcja na zmianę wybranego działu
+    dzialSelect.addEventListener("change", function() {
+        var selectedOption = dzialSelect.options[dzialSelect.selectedIndex];
+        var selectedDzialId = selectedOption.value;
 
-                divisionCell.textContent = element.division.name;
+        if (selectedDzialId === "") {
+            // Jeśli wybrano opcję "Wybierz wszystko", wyświetl wszystkie elementy
+            fetchAndDisplayElements();
+        } else {
+            // W przeciwnym razie, wyświetl tylko elementy z wybranej dywizji
+            fetchAndDisplayElements(selectedDzialId);
+        }
+    });
 
-                fetchStatusName(element.status.id)
-                    .then(statusName => {
-                        statusCell.textContent = statusName;
-                    })
-                    .catch(error => {
-                        console.error("Błąd pobierania nazwy statusu:", error);
-                    });
-
-                accomplishCell.innerHTML = `<input class="input-accomplish" type="text" value="${element.accomplish || ''}">`;
-                accomplishDateCell.innerHTML = `<input class="input-accomplish-date" type="date" value="${element.accomplish_date || ''}">`;
-                confirm_nameCell.innerHTML = `<input class="input-confirm-name" type="text" value="${element.confirm_name || ''}">`;
-                confirmDateCell.innerHTML = `<input class="input-confirm-date" type="date" value="${element.confirm_date || ''}">`;
-
-                const saveButton = document.createElement('button');
-                saveButton.textContent = 'Zapisz';
-                saveButton.classList.add('save-button');
-                actionsCell.appendChild(saveButton);
-
-                row.classList.add('elementRow');
-                elementsTable.appendChild(row);
-            });
-
-            elementsListDiv.appendChild(elementsTable);
-        })
-        .catch(error => {
-            console.error('Błąd pobierania elementów:', error);
-        });
+    // Funkcja dodawania opcji do selecta
+    function addOption(select, value, text, id) {
+        var option = document.createElement("option");
+        option.value = value;
+        option.text = text;
+        option.dataset.id = id; // Dodaj atrybut data z id działu
+        select.appendChild(option);
+    }
 
     function fetchStatusName(statusId) {
         return fetch("/status/all")

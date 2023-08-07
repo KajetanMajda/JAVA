@@ -35,11 +35,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
     });
 
-    // Reakcja na zmianę wybranego działu
-    dzialSelect.addEventListener("change", function() {
-        var selectedDzialId = dzialSelect.options[dzialSelect.selectedIndex].dataset.id;
-        console.log(selectedDzialId);
-    });
 
     // Funkcja dodawania opcji do selecta
     function addOption(select, value, text, id) {
