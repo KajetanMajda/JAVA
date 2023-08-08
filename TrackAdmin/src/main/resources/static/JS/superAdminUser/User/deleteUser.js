@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const selectedEmail = emailDeleteSelect.value;
 
         if (selectedEmail) {
+            if (window.confirm('Czy na pewno chcesz usunąć tego użytkownika?')) {
             fetch(`/user/delete?email=${selectedEmail}`, {
                 method: 'DELETE',
             })
@@ -35,8 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 .catch(error => {
                     console.error('Wystąpił błąd:', error);
                 });
-        } else {
-            console.log('Proszę wybrać użytkownika do usunięcia.');
+            }
         }
     });
 });

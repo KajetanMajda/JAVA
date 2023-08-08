@@ -58,7 +58,7 @@ public class UsersController {
         usersRole.getUsers().add(userAdd);
 
         String loggedInUserEmail = (String) session.getAttribute("loggedInUserEmail");
-        auditLogService.logUserAdd(loggedInUserEmail, name, surname);
+        auditLogService.logUserAdd(loggedInUserEmail);
         usersRepository.save(userAdd);
         return "redirect:/user/superAdminUser";
     }
@@ -98,7 +98,7 @@ public class UsersController {
     public String normalUserPage(Model model, HttpSession session) {
         String loggedInUserEmail = (String) session.getAttribute("loggedInUserEmail");
         model.addAttribute("loggedInUserEmail", loggedInUserEmail);
-//        auditLogService.logUserLogin(loggedInUserEmail);
+        auditLogService.logUserLogin(loggedInUserEmail);
         return "normalUser";
     }
 
@@ -110,8 +110,6 @@ public class UsersController {
 
     @GetMapping("/logout")
     public String logout(HttpSession session) {
-        String loggedInUserEmail = (String) session.getAttribute("loggedInUserEmail");
-//        auditLogService.logUserLogout(loggedInUserEmail);
         session.removeAttribute("loggedInUserEmail");
         return "redirect:/user/login";
     }
@@ -120,7 +118,7 @@ public class UsersController {
     public String adminUserPage(Model model, HttpSession session) {
         String loggedInUserEmail = (String) session.getAttribute("loggedInUserEmail");
         model.addAttribute("loggedInUserEmail", loggedInUserEmail);
-//        auditLogService.logUserLogin(loggedInUserEmail);
+        auditLogService.logUserLogin(loggedInUserEmail);
         return "adminUser";
     }
 
@@ -128,7 +126,7 @@ public class UsersController {
     public String superAdminUserPage(Model model, HttpSession session) {
         String loggedInUserEmail = (String) session.getAttribute("loggedInUserEmail");
         model.addAttribute("loggedInUserEmail", loggedInUserEmail);
-//        auditLogService.logUserLogin(loggedInUserEmail);
+        auditLogService.logUserLogin(loggedInUserEmail);
         return "superAdminUser";
     }
 
@@ -139,28 +137,6 @@ public class UsersController {
     }
 
 
-//    @PostMapping(path = "/updateRole")
-//    public String updateRole(@RequestParam("emailRole") String email,
-//                             @RequestParam("newRole") String newRole,
-//                             RedirectAttributes redirectAttributes,
-//                             HttpSession session) {
-//        Users userToUpdate = usersRepository.findByEmail(email);
-//        if (userToUpdate != null) {
-//            UsersRole newUsersRole = usersRoleRepository.findByName(newRole);
-//            if (newUsersRole == null) {
-//                redirectAttributes.addFlashAttribute("error", "Invalid role");
-//            } else {
-//                String loggedInUserEmail = (String) session.getAttribute("loggedInUserEmail");
-//                auditLogService.logUpdateRole(loggedInUserEmail, userToUpdate.getName(), userToUpdate.getSurname());
-//                usersRepository.save(userToUpdate);
-//                redirectAttributes.addFlashAttribute("success", "Updated role for user with email: " + email);
-//            }
-//        } else {
-//            redirectAttributes.addFlashAttribute("error", "User with email: " + email + " not found");
-//        }
-//        return "redirect:/user/superAdminUser";
-//    }
-
     @PostMapping(path = "/updateRole")
     public String updateRole(@RequestParam("emailRole") String email,
                              @RequestParam("newRole") String newRole,
@@ -170,7 +146,7 @@ public class UsersController {
             UsersRole newUsersRole = usersRoleRepository.findByName(newRole);
             if (newUsersRole != null) {
                 String loggedInUserEmail = (String) session.getAttribute("loggedInUserEmail");
-                auditLogService.logUpdateRole(loggedInUserEmail, userToUpdate.getName(), userToUpdate.getSurname());
+                auditLogService.logUpdateRole(loggedInUserEmail);
                 userToUpdate.setRole(newUsersRole);
                 usersRepository.save(userToUpdate);
             }
@@ -181,13 +157,11 @@ public class UsersController {
 
     @DeleteMapping(path = "/delete")
     public @ResponseBody String deleteUser(@RequestParam String email,
-                                           @RequestParam String name,
-                                           @RequestParam String surname,
                                            HttpSession session) {
         Users userDelete = usersRepository.findByEmail(email);
         if (userDelete != null) {
             String loggedInUserEmail = (String) session.getAttribute("loggedInUserEmail");
-            auditLogService.logDeleteUser(loggedInUserEmail, name, surname);
+            auditLogService.logDeleteUser(loggedInUserEmail);
             usersRepository.delete(userDelete);
             return "redirect:/user/superAdminUser";
         } else {
@@ -218,7 +192,7 @@ public class UsersController {
                 userUpdate.setPassword(passwordEncoder.encode(password));
             }
             String loggedInUserEmail = (String) session.getAttribute("loggedInUserEmail");
-            auditLogService.logUpdateUser(loggedInUserEmail, name, surname);
+            auditLogService.logUpdateUser(loggedInUserEmail);
             usersRepository.save(userUpdate);
 
             return "redirect:/user/superAdminUser";

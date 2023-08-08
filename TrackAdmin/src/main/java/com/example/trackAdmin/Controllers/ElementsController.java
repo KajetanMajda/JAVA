@@ -29,16 +29,17 @@ public class ElementsController {
     private AuditLogService auditLogService;
 
     @PostMapping(path = "/add")
-    public @ResponseBody String addNewElement(@RequestParam String transaction,
-                                              @RequestParam String description,
-                                              @RequestParam String comment,
-                                              @RequestParam String confirm_name,
-                                              @RequestParam Integer statusId,
-                                              @RequestParam String accomplish,
+    public @ResponseBody String addNewElement(@RequestParam (required = false) String transaction,
+                                              @RequestParam (required = false) String description,
+                                              @RequestParam (required = false) String comment,
+                                              @RequestParam (required = false) String confirm_name,
+                                              @RequestParam (required = false) Integer statusId,
+                                              @RequestParam (required = false) String accomplish,
                                               @RequestParam (required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate accomplish_date,
                                               @RequestParam (required = false) String confirm,
                                               @RequestParam (required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate confirm_date,
-                                              @RequestParam (required = false) Integer divisionId) {
+                                              @RequestParam (required = false) Integer divisionId,
+                                              HttpSession session) {
         Elements elements = new Elements();
         elements.setTransaction(transaction);
         elements.setDescription(description);
@@ -56,6 +57,11 @@ public class ElementsController {
         Status status = new Status();
         status.setId(statusId);
         elements.setStatus(status);
+
+
+
+        String loggedInUserEmail = (String) session.getAttribute("loggedInUserEmail");
+        auditLogService.logElementsAdd(loggedInUserEmail);
 
         elementsRepository.save(elements);
         return "saved";
@@ -114,7 +120,7 @@ public class ElementsController {
             }
 
             String loggedInUserEmail = (String) session.getAttribute("loggedInUserEmail");
-            auditLogService.logElementUpdate(loggedInUserEmail, id); // Dodaj id elementu
+            auditLogService.logElementUpdate(loggedInUserEmail, id);
             elementsRepository.save(elementsUpdate);
             return "Zaktualizowano element o ID: " + id;
         } else {
@@ -123,9 +129,11 @@ public class ElementsController {
     }
 
     @DeleteMapping(path = "/delete")
-    public @ResponseBody String elemnentDelete(@RequestParam Integer id){
+    public @ResponseBody String elemnentDelete(@RequestParam Integer id, HttpSession session){
         Elements elementsDelete = elementsRepository.findById(id).orElse(null);
         if(elementsDelete != null){
+            String loggedInUserEmail = (String) session.getAttribute("loggedInUserEmail");
+            auditLogService.logDeleteElement(loggedInUserEmail, id);
             elementsRepository.delete(elementsDelete);
             return id + " zostalo usuiniete";
         }else {

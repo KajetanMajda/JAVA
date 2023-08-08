@@ -18,22 +18,24 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Błąd pobierania elementów:', error);
         });
 
-// Obsługa usuwania elementu
+    // Obsługa usuwania elementu
     deleteElementButton.addEventListener('click', function() {
         const selectedElementId = deleteElementsSelect.value;
         if (selectedElementId) {
-            fetch(`/elements/delete?id=${selectedElementId}`, {
-                method: 'DELETE',
-            })
-                .then(response => response.text())
-                .then(data => {
-                    console.log(data);
-                    // Odśwież listę elementów
-                    location.reload();
+            if (window.confirm('Czy na pewno chcesz usunąć ten element?')) {
+                fetch(`/elements/delete?id=${selectedElementId}`, {
+                    method: 'DELETE',
                 })
-                .catch(error => {
-                    console.error('Błąd usuwania elementu:', error);
-                });
+                    .then(response => response.text())
+                    .then(data => {
+                        console.log(data);
+                        // Odśwież listę elementów
+                        location.reload();
+                    })
+                    .catch(error => {
+                        console.error('Błąd usuwania elementu:', error);
+                    });
+            }
         }
     });
 

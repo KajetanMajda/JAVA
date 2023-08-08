@@ -33,22 +33,24 @@ document.addEventListener('DOMContentLoaded', function() {
     addProjectButton.addEventListener('click', function() {
         const projectName = newProjectNameInput.value;
         if (projectName) {
-            fetch('/projects/add', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: `name=${projectName}`,
-            })
-                .then(response => response.text())
-                .then(data => {
-                    console.log(data);
-                    // Odśwież listę projektów
-                    location.reload();
+            if (window.confirm('Czy na pewno chcesz dodać nowy projekt?')) {
+                fetch('/projects/add', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `name=${projectName}`,
                 })
-                .catch(error => {
-                    console.error('Błąd dodawania projektu:', error);
-                });
+                    .then(response => response.text())
+                    .then(data => {
+                        console.log(data);
+                        // Odśwież listę projektów
+                        location.reload();
+                    })
+                    .catch(error => {
+                        console.error('Błąd dodawania projektu:', error);
+                    });
+            }
         }
     });
 
@@ -56,18 +58,20 @@ document.addEventListener('DOMContentLoaded', function() {
     deleteProjectButton.addEventListener('click', function() {
         const selectedProject = deleteProjectSelect.value;
         if (selectedProject) {
-            fetch(`/projects/delete?name=${selectedProject}`, {
-                method: 'DELETE',
-            })
-                .then(response => response.text())
-                .then(data => {
-                    console.log(data);
-                    // Odśwież listę projektów
-                    location.reload();
+            if (window.confirm('Czy na pewno chcesz usunąć ten projekt?')) {
+                fetch(`/projects/delete?name=${selectedProject}`, {
+                    method: 'DELETE',
                 })
-                .catch(error => {
-                    console.error('Błąd usuwania projektu:', error);
-                });
+                    .then(response => response.text())
+                    .then(data => {
+                        console.log(data);
+                        // Odśwież listę projektów
+                        location.reload();
+                    })
+                    .catch(error => {
+                        console.error('Błąd usuwania projektu:', error);
+                    });
+            }
         }
     });
 
@@ -76,18 +80,20 @@ document.addEventListener('DOMContentLoaded', function() {
         const selectedProjectId = updateProjectSelect.value;
         const updatedProjectName = updatedProjectNameInput.value;
         if (selectedProjectId && updatedProjectName) {
-            fetch(`/projects/update?id=${selectedProjectId}&name=${updatedProjectName}`, {
-                method: 'PUT',
-            })
-                .then(response => response.text())
-                .then(data => {
-                    console.log(data);
-                    // Odśwież listę projektów
-                    location.reload();
+            if (window.confirm('Czy na pewno chcesz zaktualizować nazwę projektu?')) {
+                fetch(`/projects/update?id=${selectedProjectId}&name=${updatedProjectName}`, {
+                    method: 'PUT',
                 })
-                .catch(error => {
-                    console.error('Błąd aktualizacji projektu:', error);
-                });
+                    .then(response => response.text())
+                    .then(data => {
+                        console.log(data);
+                        // Odśwież listę projektów
+                        location.reload();
+                    })
+                    .catch(error => {
+                        console.error('Błąd aktualizacji projektu:', error);
+                    });
+            }
         }
     });
 });

@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
                 const headerRow = elementsTable.insertRow();
                 const headerColumns = ['Lp', 'Dział', 'Operacja', 'Opis', 'Uwagi', 'Status', 'Zrealizowane przez',
-                    'Data realizacji', 'Zatwierdzone przez ', 'Data zatwierdzenia','Zaktualizuj'];
+                    'Data realizacji', 'Zatwierdzone przez', 'Data zatwierdzenia', 'Zaktualizuj'];
                 headerColumns.forEach(column => {
                     const th = document.createElement('th');
                     th.textContent = column;
@@ -35,13 +35,10 @@ document.addEventListener("DOMContentLoaded", function() {
                         const actionsCell = row.insertCell();
 
                         idCell.textContent = element.id;
-                        transactionCell.innerHTML =`<input class="input-transaction" type="text" value="${element.transaction || ''}">`
-                        descriptionCell.innerHTML =`<textarea class="textarea-description">${element.description || ''}</textarea>`
-                        commentCell.innerHTML =`<textarea class="textarea-comment">${element.comment || ''}</textarea>`
+                        transactionCell.innerHTML = `<input class="input-transaction" type="text" value="${element.transaction || ''}">`
+                        descriptionCell.innerHTML = `<textarea class="textarea-description">${element.description || ''}</textarea>`
+                        commentCell.innerHTML = `<textarea class="textarea-comment">${element.comment || ''}</textarea>`
                         divisionCell.textContent = element.division.name;
-
-
-
 
                         const statusSelect = document.createElement("select");
                         statusSelect.classList.add("input-status");
@@ -81,8 +78,68 @@ document.addEventListener("DOMContentLoaded", function() {
                     }
                 });
 
+                const newRow = elementsTable.insertRow(); // Dodaj pusty wiersz na dodawanie elementów
+                newRow.innerHTML = `
+                    <td></td>
+<!--                    <input class="input-id" type="number" min="1">-->
+                    <td>
+                        <select class="input-division">
+                            <option value="">Wybierz dywizję</option>
+                            <!-- Pobierz i dodaj opcje dywizji do rozwijanej listy -->
+                            <!-- Zostaw puste, zostanie uzupełnione przy załadowaniu -->
+                        </select>
+                    </td>
+                    <td><input class="input-transaction" type="text"></td>
+                    <td><textarea class="textarea-description"></textarea></td>
+                    <td><textarea class="textarea-comment"></textarea></td>
+                    <td>
+                        <select class="input-status">
+                            <!-- Pobierz i dodaj opcje statusów do rozwijanej listy -->
+                            <!-- Zostaw puste, zostanie uzupełnione przy załadowaniu -->
+                        </select>
+                    </td>
+                    <td><input class="input-accomplish" type="text"></td>
+                    <td><input class="input-accomplish-date" type="date"></td>
+                    <td><input class="input-confirm-name" type="text"></td>
+                    <td><input class="input-confirm-date" type="date"></td>
+                    <td><button class="add-button">Dodaj</button></td>`;
+                newRow.classList.add('elementRow', 'new-row');
+                elementsTable.appendChild(newRow);
+
                 elementsListDiv.innerHTML = ''; // Wyczyść zawartość przed dodaniem nowej tabeli
                 elementsListDiv.appendChild(elementsTable);
+
+                // Pobierz i dodaj opcje dywizji do rozwijanej listy
+                const divisionSelect = newRow.querySelector('.input-division');
+                fetch("/division/all")
+                    .then(response => response.json())
+                    .then(divisions => {
+                        divisions.forEach(division => {
+                            const option = document.createElement("option");
+                            option.value = division.id;
+                            option.textContent = division.name;
+                            divisionSelect.appendChild(option);
+                        });
+                    })
+                    .catch(error => {
+                        console.error("Błąd pobierania dywizji:", error);
+                    });
+
+                // Pobierz i dodaj opcje statusów do rozwijanej listy
+                const statusSelect = newRow.querySelector('.input-status');
+                fetch("/status/all")
+                    .then(response => response.json())
+                    .then(statuses => {
+                        statuses.forEach(status => {
+                            const option = document.createElement("option");
+                            option.value = status.id;
+                            option.textContent = status.name;
+                            statusSelect.appendChild(option);
+                        });
+                    })
+                    .catch(error => {
+                        console.error("Błąd pobierania statusów:", error);
+                    });
             })
             .catch(error => {
                 console.error('Błąd pobierania elementów:', error);
@@ -177,6 +234,55 @@ document.addEventListener("DOMContentLoaded", function() {
                     })
                     .catch(error => {
                         console.error('Błąd aktualizacji elementu:', error);
+                    });
+            }
+        }
+    });
+
+    elementsListDiv.addEventListener('click', function(event) {
+        if (event.target.classList.contains('add-button')) {
+            const newRow = event.target.parentElement.parentElement;
+            // const inputId = newRow.querySelector('.input-id');
+
+            const confirmMessages = "Czy na pewno chcesz dodać element?";
+            const isConfirmedAdd = window.confirm(confirmMessages);
+            if (isConfirmedAdd) {
+                const inputDivision = newRow.querySelector('.input-division');
+                const inputTransaction = newRow.querySelector('.input-transaction');
+                const textareaDescription = newRow.querySelector('.textarea-description');
+                const textareaComment = newRow.querySelector('.textarea-comment');
+                const inputStatus = newRow.querySelector('.input-status');
+                const inputAccomplish = newRow.querySelector('.input-accomplish');
+                const inputAccomplishDate = newRow.querySelector('.input-accomplish-date');
+                const inputConfirmName = newRow.querySelector('.input-confirm-name');
+                const inputConfirmDate = newRow.querySelector('.input-confirm-date');
+
+                const formData = new URLSearchParams();
+                // formData.append('id', inputId.value);
+                formData.append('divisionId', inputDivision.value);
+                formData.append('transaction', inputTransaction.value);
+                formData.append('description', textareaDescription.value);
+                formData.append('comment', textareaComment.value);
+                formData.append('statusId', inputStatus.value);
+                formData.append('accomplish', inputAccomplish.value);
+                formData.append('accomplish_date', inputAccomplishDate.value);
+                formData.append('confirm_name', inputConfirmName.value);
+                formData.append('confirm_date', inputConfirmDate.value);
+
+                fetch(`/elements/add`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: formData.toString()
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        fetchAndDisplayElements();
+                    })
+                    .catch(error => {
+                        console.error('Błąd dodawania elementu:', error);
+                        location.reload();
                     });
             }
         }
