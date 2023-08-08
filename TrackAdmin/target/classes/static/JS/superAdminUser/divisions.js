@@ -23,22 +23,24 @@ document.addEventListener('DOMContentLoaded', function() {
         const divisionName = newDivisionNameInput.value;
         const selectedProjectId = addDivisionProjectSelect.value;
         if (divisionName && selectedProjectId) {
-            fetch('/division/add', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: `name=${divisionName}&projectsId=${selectedProjectId}`,
-            })
-                .then(response => response.text())
-                .then(data => {
-                    console.log(data);
-                    // Odśwież listę dywizji
-                    location.reload();
+            if (window.confirm('Czy na pewno chcesz dodać tę dywizję?')) {
+                fetch('/division/add', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `name=${divisionName}&projectsId=${selectedProjectId}`,
                 })
-                .catch(error => {
-                    console.error('Błąd dodawania dywizji:', error);
-                });
+                    .then(response => response.text())
+                    .then(data => {
+                        console.log(data);
+                        // Odśwież listę dywizji
+                        location.reload();
+                    })
+                    .catch(error => {
+                        console.error('Błąd dodawania dywizji:', error);
+                    });
+            }
         }
     });
 });
@@ -76,18 +78,20 @@ document.addEventListener('DOMContentLoaded', function() {
     deleteDivisionButton.addEventListener('click', function() {
         const selectedDivision = deleteDivisionSelect.value;
         if (selectedDivision) {
-            fetch(`/division/delete?name=${selectedDivision}`, {
-                method: 'DELETE',
-            })
-                .then(response => response.text())
-                .then(data => {
-                    console.log(data);
-                    // Odśwież listę dywizji
-                    location.reload();
+            if (window.confirm('Czy na pewno chcesz usunąć tę dywizję?')) {
+                fetch(`/division/delete?name=${selectedDivision}`, {
+                    method: 'DELETE',
                 })
-                .catch(error => {
-                    console.error('Błąd usuwania dywizji:', error);
-                });
+                    .then(response => response.text())
+                    .then(data => {
+                        console.log(data);
+                        // Odśwież listę dywizji
+                        location.reload();
+                    })
+                    .catch(error => {
+                        console.error('Błąd usuwania dywizji:', error);
+                    });
+            }
         }
     });
 
@@ -96,18 +100,20 @@ document.addEventListener('DOMContentLoaded', function() {
         const selectedDivisionId = updateDivisionSelect.value;
         const updatedDivisionName = updatedDivisionNameInput.value;
         if (selectedDivisionId && updatedDivisionName) {
-            fetch(`/division/update?id=${selectedDivisionId}&name=${updatedDivisionName}`, {
-                method: 'PUT',
-            })
-                .then(response => response.text())
-                .then(data => {
-                    console.log(data);
-                    // Odśwież listę dywizji
-                    location.reload();
+            if (window.confirm('Czy na pewno chcesz zaktualizować tę dywizję?')) {
+                fetch(`/division/update?id=${selectedDivisionId}&name=${updatedDivisionName}`, {
+                    method: 'PUT',
                 })
-                .catch(error => {
-                    console.error('Błąd aktualizacji dywizji:', error);
-                });
+                    .then(response => response.text())
+                    .then(data => {
+                        console.log(data);
+                        // Odśwież listę dywizji
+                        location.reload();
+                    })
+                    .catch(error => {
+                        console.error('Błąd aktualizacji dywizji:', error);
+                    });
+            }
         }
     });
 });
@@ -152,18 +158,20 @@ document.addEventListener('DOMContentLoaded', function() {
         const selectedDivision = changeDivisionSelect.value;
         const selectedProjectId = changeProjectSelect.value;
         if (selectedDivision && selectedProjectId) {
-            fetch(`/division/changeProjects?name=${selectedDivision}&projectsId=${selectedProjectId}`, {
-                method: 'PUT',
-            })
-                .then(response => response.text())
-                .then(data => {
-                    console.log(data);
-                    // Odśwież listę dywizji
-                    location.reload();
+            if (window.confirm('Czy na pewno chcesz zmieć projekt tej dywizji?')) {
+                fetch(`/division/changeProjects?name=${selectedDivision}&projectsId=${selectedProjectId}`, {
+                    method: 'PUT',
                 })
-                .catch(error => {
-                    console.error('Błąd zmiany projektu dywizji:', error);
-                });
+                    .then(response => response.text())
+                    .then(data => {
+                        console.log(data);
+                        // Odśwież listę dywizji
+                        location.reload();
+                    })
+                    .catch(error => {
+                        console.error('Błąd zmiany projektu dywizji:', error);
+                    });
+            }
         }
     });
 });

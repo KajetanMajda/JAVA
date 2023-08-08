@@ -4,16 +4,17 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="/CSS/SuperAdminUser/main.css">
     <link rel="icon" type="image/jpeg" href="/ICONS/icon.jpg">
-    <title>SuperAdminPage</title>
+    <title>SuperAdminUserPage</title>
 </head>
 <body>
 
 <div class="navbar">
     <div class="navbar-left">
-        <p>Witaj, Admin!</p>
+        <p>Zalogowany użytkownik: <span id="loggedInUserEmail" th:text="${loggedInUserEmail}"></span></p>
     </div>
     <div class="navbar-right">
-        <button id="logoutButton" onclick="logout()">Wyloguj</button>
+        <button id="deleteButton">Wyczyść dziennik</button>
+        <button id="logoutButton">Wyloguj</button>
     </div>
 </div>
 <div class="firstCol">
@@ -25,12 +26,14 @@
                     <div class="input-group">
                         <input id="name" name="name" placeholder="Imię:">
                         <input id="surname" name="surname" placeholder="Nazwisko:">
-                        <input type="password" id="password" name="password" placeholder="Hasło:">
+                        <input type="password" id="password" name="password" placeholder="Hasło:"
+                               pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                               title="Musi zawierać co najmniej jedną cyfrę oraz jedną dużą i małą literę, oraz mieć co najmniej 8 lub więcej znaków.">
                     </div>
                 </div>
                 <div class="inputs-row2">
                     <div class="input-group2">
-                        <input id="email" name="email" placeholder="Email:">
+                        <input id="email" name="email" type="email" placeholder="Email:">
                         <select id="role" name="role">
                             <option value="" disabled selected>Rola:</option>
                             <!-- JavaScript -->
@@ -55,7 +58,7 @@
                     <option value="" disabled selected>Wybierz nową rolę:</option>
                     <!-- JavaScript -->
                 </select><br>
-                <button type="submit">Zmień rolę</button>
+                <button type="submit" id="changeRoleButton">Zmień rolę</button>
             </form>
         </div>
     </div>
@@ -70,7 +73,9 @@
                 <div class="inputs-groupUpdate">
                     <input type="text" id="nameUpdate" name="name" placeholder="Imię:"/><br>
                     <input type="text" id="surnameUpdate" name="surname" placeholder="Nazwisko:"/><br>
-                    <input type="password" id="passwordUpdate" name="password" placeholder="Hasło:"/><br>
+                    <input type="password" id="passwordUpdate" name="password" placeholder="Hasło:"
+                           pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                           title="Musi zawierać co najmniej jedną cyfrę oraz jedną dużą i małą literę, oraz mieć co najmniej 8 lub więcej znaków."/><br>
                 </div>
                 <input type="email" id="emailUpdate" name="email" placeholder="Adres e-mail:"/>
                 <button type="submit">Zaktualizuj użytkownika</button>
@@ -109,8 +114,11 @@
     <div class="secondRow">
         <div class="secondRowInsideSecCol scrollable">
             <p>Dzienniki audytu</p>
-            <div class="userLogs">
-
+            <div class="auditLog">
+                <!-- JavaScript -->
+            </div>
+            <div class="auditLogDetails">
+                <!-- JavaScript -->
             </div>
         </div>
     </div>
@@ -231,23 +239,21 @@
 </div>
 
 <div class="footer">
-    <p>Tutaj admini i super admini beda mogli dodac rzeczy do elementu? IDK</p>
+    <p></p>
 </div>
 </body>
-    <script>
-        function logout() {
-            window.location.href = "/user/login";
-        }
-    </script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script type="text/javascript" src="/JS/superAdminUser/User/updateRole.js"></script>
-    <script type="text/javascript" src="/JS/superAdminUser/User/updateUser.js"></script>
-    <script type="text/javascript" src="/JS/superAdminUser/User/deleteUser.js"></script>
-    <script type="text/javascript" src="/JS/superAdminUser/User/addUser.js"></script>
-    <script type="text/javascript" src="/JS/superAdminUser/userList.js"></script>
-    <script type="text/javascript" src="/JS/superAdminUser/roles.js"></script>
-    <script type="text/javascript" src="/JS/superAdminUser/statuses.js"></script>
-    <script type="text/javascript" src="/JS/superAdminUser/projects.js"></script>
-    <script type="text/javascript" src="/JS/superAdminUser/divisions.js"></script>
-    <script type="text/javascript" src="/JS/superAdminUser/elements.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript" src="/JS/login/login.js"></script>
+<script type="text/javascript" src="/JS/superAdminUser/logsDelete.js"></script>
+<script type="text/javascript" src="/JS/superAdminUser/User/updateRole.js"></script>
+<script type="text/javascript" src="/JS/superAdminUser/User/updateUser.js"></script>
+<script type="text/javascript" src="/JS/superAdminUser/User/deleteUser.js"></script>
+<script type="text/javascript" src="/JS/superAdminUser/User/addUser.js"></script>
+<script type="text/javascript" src="/JS/superAdminUser/userList.js"></script>
+<script type="text/javascript" src="/JS/superAdminUser/logList.js"></script>
+<script type="text/javascript" src="/JS/superAdminUser/roles.js"></script>
+<script type="text/javascript" src="/JS/superAdminUser/statuses.js"></script>
+<script type="text/javascript" src="/JS/superAdminUser/projects.js"></script>
+<script type="text/javascript" src="/JS/superAdminUser/divisions.js"></script>
+<script type="text/javascript" src="/JS/superAdminUser/elements.js"></script>
 </html>

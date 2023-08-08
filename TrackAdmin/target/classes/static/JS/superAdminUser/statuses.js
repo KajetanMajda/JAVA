@@ -14,7 +14,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 deleteOption.value = status.name;
                 deleteOption.textContent = status.name;
                 deleteStatusSelect.appendChild(deleteOption);
-
             });
         })
         .catch(error => {
@@ -25,22 +24,24 @@ document.addEventListener('DOMContentLoaded', function() {
     addStatusButton.addEventListener('click', function() {
         const statusName = newStatusNameInput.value;
         if (statusName) {
-            fetch('/status/add', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: `name=${statusName}`,
-            })
-                .then(response => response.text())
-                .then(data => {
-                    console.log(data);
-                    // Odśwież listę statusów
-                    location.reload();
+            if (window.confirm(`Czy na pewno chcesz dodać nowy status: ${statusName}?`)) {
+                fetch('/status/add', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `name=${statusName}`,
                 })
-                .catch(error => {
-                    console.error('Błąd dodawania statusu:', error);
-                });
+                    .then(response => response.text())
+                    .then(data => {
+                        console.log(data);
+                        // Odśwież listę statusów
+                        location.reload();
+                    })
+                    .catch(error => {
+                        console.error('Błąd dodawania statusu:', error);
+                    });
+            }
         }
     });
 
@@ -48,23 +49,25 @@ document.addEventListener('DOMContentLoaded', function() {
     deleteStatusButton.addEventListener('click', function() {
         const selectedStatus = deleteStatusSelect.value;
         if (selectedStatus) {
-            fetch(`/status/delete?name=${selectedStatus}`, {
-                method: 'DELETE',
-            })
-                .then(response => response.text())
-                .then(data => {
-                    console.log(data);
-                    // Odśwież listę statusów
-                    location.reload();
+            if (window.confirm('Czy na pewno chcesz usunąć ten status?')) {
+                fetch(`/status/delete?name=${selectedStatus}`, {
+                    method: 'DELETE',
                 })
-                .catch(error => {
-                    console.error('Błąd usuwania statusu:', error);
-                });
+                    .then(response => response.text())
+                    .then(data => {
+                        console.log(data);
+                        // Odśwież listę statusów
+                        location.reload();
+                    })
+                    .catch(error => {
+                        console.error('Błąd usuwania statusu:', error);
+                    });
+            }
         }
     });
 });
 
-// obsluga aktualizaji statusu
+// obsługa aktualizacji statusu
 document.addEventListener('DOMContentLoaded', function() {
     const updateStatusButton = document.getElementById('updateStatusButton');
     const updateStatusSelect = document.getElementById('updateStatusSelect');
@@ -88,18 +91,20 @@ document.addEventListener('DOMContentLoaded', function() {
         const selectedStatusId = updateStatusSelect.value;
         const updatedStatusName = updatedStatusNameInput.value;
         if (selectedStatusId && updatedStatusName) {
-            fetch(`/status/update?id=${selectedStatusId}&name=${updatedStatusName}`, {
-                method: 'PUT',
-            })
-                .then(response => response.text())
-                .then(data => {
-                    console.log(data);
-                    // Odśwież listę statusów
-                    location.reload();
+            if (window.confirm(`Czy na pewno chcesz zaktualizować status o ID ${selectedStatusId} na: ${updatedStatusName}?`)) {
+                fetch(`/status/update?id=${selectedStatusId}&name=${updatedStatusName}`, {
+                    method: 'PUT',
                 })
-                .catch(error => {
-                    console.error('Błąd aktualizacji statusu:', error);
-                });
+                    .then(response => response.text())
+                    .then(data => {
+                        console.log(data);
+                        // Odśwież listę statusów
+                        location.reload();
+                    })
+                    .catch(error => {
+                        console.error('Błąd aktualizacji statusu:', error);
+                    });
+            }
         }
     });
 });

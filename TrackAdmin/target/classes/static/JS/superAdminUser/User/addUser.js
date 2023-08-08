@@ -42,18 +42,19 @@ document.addEventListener("DOMContentLoaded", function () {
             password: password,
             role: role
         });
-
-        fetch('/user/add', {
-            method: 'POST',
-            body: formData
-        })
-            .then(response => response.text())
-            .then(data => {
-                console.log(data);
-                window.location.href = '/user/superAdminUser';
+        if (window.confirm('Czy na pewno chcesz dodać tego użytkownika?')) {
+            fetch('/user/add', {
+                method: 'POST',
+                body: formData
             })
-            .catch(error => {
-                console.error('Błąd:', error);
-            });
+                .then(response => response.text())
+                .then(data => {
+                    console.log(data);
+                    window.location.href = '/user/superAdminUser';
+                })
+                .catch(error => {
+                    console.error('Błąd:', error);
+                });
+        }
     });
 });

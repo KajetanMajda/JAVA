@@ -41,6 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+
     fetch('/userRole/all')
         .then(response => response.json())
         .then(data => {
@@ -58,11 +59,24 @@ document.addEventListener('DOMContentLoaded', function() {
             newRoleSelect.addEventListener('change', function() {
                 if (currentRoleInput.value === newRoleSelect.value) {
                     alert('Nie możesz wybrać tej samej roli, co obecna rola.');
-                    newRoleSelect.value = ''; // Wyczyszczenie wyboru
+                    newRoleSelect.value = '';
                 }
             });
         })
         .catch(error => {
             console.error('Błąd pobierania ról:', error);
         });
+});
+
+document.addEventListener("DOMContentLoaded", function() {
+    const changeRoleButton = document.getElementById("changeRoleButton");
+
+    changeRoleButton.addEventListener("click", function(event) {
+        const confirmation = window.confirm("Czy na pewno chcesz zmienić użytkownikowi rolę?");
+
+        if (!confirmation) {
+            event.preventDefault(); // Zatrzymaj wysłanie formularza
+        }
+    });
+
 });

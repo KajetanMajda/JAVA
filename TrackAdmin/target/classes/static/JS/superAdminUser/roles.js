@@ -29,22 +29,24 @@ document.addEventListener('DOMContentLoaded', function() {
         const roleName = newRoleNameInput.value;
         console.log('Próbuję dodać rolę:', roleName);
         if (roleName) {
-            fetch('/userRole/add', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: `name=${roleName}`,
-            })
-                .then(response => response.text())
-                .then(data => {
-                    console.log(data);
-                    // Odśwież listę ról
-                    location.reload();
+            if (window.confirm(`Czy na pewno chcesz dodać nową rolę: ${roleName}?`)) {
+                fetch('/userRole/add', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `name=${roleName}`,
                 })
-                .catch(error => {
-                    console.error('Błąd dodawania roli:', error);
-                });
+                    .then(response => response.text())
+                    .then(data => {
+                        console.log(data);
+                        // Odśwież listę ról
+                        location.reload();
+                    })
+                    .catch(error => {
+                        console.error('Błąd dodawania roli:', error);
+                    });
+            }
         }
     });
 
@@ -52,18 +54,20 @@ document.addEventListener('DOMContentLoaded', function() {
     deleteRoleButton.addEventListener('click', function() {
         const selectedRole = deleteRoleSelect.value;
         if (selectedRole) {
-            fetch(`/userRole/delete?name=${selectedRole}`, {
-                method: 'DELETE',
-            })
-                .then(response => response.text())
-                .then(data => {
-                    console.log(data);
-                    // Odśwież listę ról
-                    location.reload();
+            if (window.confirm(`Czy na pewno chcesz usunąć rolę: ${selectedRole}?`)) {
+                fetch(`/userRole/delete?name=${selectedRole}`, {
+                    method: 'DELETE',
                 })
-                .catch(error => {
-                    console.error('Błąd usuwania roli:', error);
-                });
+                    .then(response => response.text())
+                    .then(data => {
+                        console.log(data);
+                        // Odśwież listę ról
+                        location.reload();
+                    })
+                    .catch(error => {
+                        console.error('Błąd usuwania roli:', error);
+                    });
+            }
         }
     });
 
@@ -93,18 +97,20 @@ document.addEventListener('DOMContentLoaded', function() {
         const selectedRoleId = updateRoleSelect.value;
         const updatedRoleName = updatedRoleNameInput.value;
         if (selectedRoleId && updatedRoleName) {
-            fetch(`/userRole/update?id=${selectedRoleId}&name=${updatedRoleName}`, {
-                method: 'PUT',
-            })
-                .then(response => response.text())
-                .then(data => {
-                    console.log(data);
-                    // Odśwież listę ról
-                    location.reload();
+            if (window.confirm(`Czy na pewno chcesz zaktualizować rolę o ID ${selectedRoleId} na: ${updatedRoleName}?`)) {
+                fetch(`/userRole/update?id=${selectedRoleId}&name=${updatedRoleName}`, {
+                    method: 'PUT',
                 })
-                .catch(error => {
-                    console.error('Błąd aktualizacji roli:', error);
-                });
+                    .then(response => response.text())
+                    .then(data => {
+                        console.log(data);
+                        // Odśwież listę ról
+                        location.reload();
+                    })
+                    .catch(error => {
+                        console.error('Błąd aktualizacji roli:', error);
+                    });
+            }
         }
     });
 });

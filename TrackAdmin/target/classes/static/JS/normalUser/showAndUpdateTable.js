@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     const elementsListDiv = document.querySelector('.elementsList');
     const elementDetailsDiv = document.querySelector('.elementDetails');
 
@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
                 const headerRow = elementsTable.insertRow();
                 const headerColumns = ['Lp', 'Dział', 'Operacja', 'Opis', 'Uwagi', 'Status', 'Zrealizowane przez',
-                    'Data realizacji', 'Zatwierdzone przez ', 'Data zatwierdzenia','Zaktualizuj'];
+                    'Data realizacji', 'Zatwierdzone przez ', 'Data zatwierdzenia', 'Zaktualizuj'];
                 headerColumns.forEach(column => {
                     const th = document.createElement('th');
                     th.textContent = column;
@@ -77,7 +77,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const dzialSelect = document.getElementById("dzial");
 
     // Reakcja na zmianę wybranego działu
-    dzialSelect.addEventListener("change", function() {
+    dzialSelect.addEventListener("change", function () {
         var selectedOption = dzialSelect.options[dzialSelect.selectedIndex];
         var selectedDzialId = selectedOption.value;
 
@@ -90,14 +90,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    // Funkcja dodawania opcji do selecta
-    function addOption(select, value, text, id) {
-        var option = document.createElement("option");
-        option.value = value;
-        option.text = text;
-        option.dataset.id = id; // Dodaj atrybut data z id działu
-        select.appendChild(option);
-    }
 
     function fetchStatusName(statusId) {
         return fetch("/status/all")
@@ -108,7 +100,7 @@ document.addEventListener("DOMContentLoaded", function() {
             });
     }
 
-    elementsListDiv.addEventListener('click', function(event) {
+    elementsListDiv.addEventListener('click', function (event) {
         if (event.target.parentElement.classList.contains('elementRow')) {
             const selectedId = event.target.parentElement.cells[0].textContent;
 
@@ -123,39 +115,44 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    elementsListDiv.addEventListener('click', function(event) {
+    elementsListDiv.addEventListener('click', function (event) {
         if (event.target.classList.contains('save-button')) {
             const row = event.target.parentElement.parentElement;
             const id = row.cells[0].textContent;
-            const inputAccomplish = row.querySelector('.input-accomplish');
-            const inputAccomplishDate = row.querySelector('.input-accomplish-date');
-            const inputConfirmName = row.querySelector('.input-confirm-name'); // Poprawiona nazwa zmiennej
-            const inputConfirmDate = row.querySelector('.input-confirm-date');
-            const formData = new URLSearchParams();
 
-            formData.append('id', id);
-            formData.append('accomplish', inputAccomplish.value);
-            formData.append('accomplish_date', inputAccomplishDate.value);
-            formData.append('confirm_name', inputConfirmName.value);
-            formData.append('confirm_date', inputConfirmDate.value);
+            const confirmMessages = "Czy napewno chcesz zapisać zmiany?";
+            const isConfirmed = window.confirm(confirmMessages);
+
+            if (isConfirmed) {
+                const inputAccomplish = row.querySelector('.input-accomplish');
+                const inputAccomplishDate = row.querySelector('.input-accomplish-date');
+                const inputConfirmName = row.querySelector('.input-confirm-name'); // Poprawiona nazwa zmiennej
+                const inputConfirmDate = row.querySelector('.input-confirm-date');
+                const formData = new URLSearchParams();
+
+                formData.append('id', id);
+                formData.append('accomplish', inputAccomplish.value);
+                formData.append('accomplish_date', inputAccomplishDate.value);
+                formData.append('confirm_name', inputConfirmName.value);
+                formData.append('confirm_date', inputConfirmDate.value);
 
 
-
-            fetch(`/elements/update`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: formData.toString()
-            })
-                .then(response => response.text())
-                .then(data => {
-                    console.log(data);
-                    location.reload(); // Odśwież tabelę elementów
+                fetch(`/elements/update`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: formData.toString()
                 })
-                .catch(error => {
-                    console.error('Błąd aktualizacji elementu:', error);
-                });
+                    .then(response => response.text())
+                    .then(data => {
+                        console.log(data);
+                        location.reload(); // Odśwież tabelę elementów
+                    })
+                    .catch(error => {
+                        console.error('Błąd aktualizacji elementu:', error);
+                    });
+            }
         }
     });
 });

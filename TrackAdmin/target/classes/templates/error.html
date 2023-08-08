@@ -2,16 +2,22 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="/CSS/Error/main.css">
     <link rel="icon" type="image/jpeg" href="/ICONS/icon.jpg">
-    <title>Error</title>
+    <title>ErrorPage</title>
 </head>
 <body>
-    <H1>ERRORR sadge</H1>
-    <button onclick="backTuSuperAdmin()">Powrot</button>
+<div class="error">
+    <div class="errorInside">
+        <h2>Ups coś poszło nie tak :(</h2>
+        <button type="submit" onclick="back()">Powrót</button>
+    </div>
+</div>
 </body>
+
 <script>
-    function backTuSuperAdmin() {
-        window.location.href = "/user/superAdminUser";
+    function back() {
+        window.location.href = "/user/login";
     }
 </script>
 </html>
