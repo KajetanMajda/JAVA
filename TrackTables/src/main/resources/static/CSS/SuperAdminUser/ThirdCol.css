@@ -1,0 +1,113 @@
+.firstRowTC,
+.secondRowTC,
+.thirdRowTC{
+    height: 23%;
+}
+
+.fourthRowTC{
+    height: 32%;
+}
+
+.thirdCol p{
+    text-align: center;
+    font-size: 18px;
+    text-transform: uppercase;
+    font-weight: bold;
+    padding: 3px;
+    color: #4caf50;
+}
+
+.thirdCol input::placeholder{
+    color: #333;
+}
+
+.thirdCol select option[disabled][selected]{
+    display: none;
+}
+
+.thirdCol button {
+    background-color: #4caf50;
+    color: white;
+    padding: 6px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 9px;
+    text-align: center;
+    width: 15%;
+}
+
+.thirdCol button:hover {
+    background-color: #45a049;
+}
+
+.thirdCol input,
+.thirdCol select{
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+    background-color: whitesmoke;
+    padding:5px;
+    text-align: center;
+}
+
+.firstRowInside,
+.secondRowInside,
+.thirdRowInside,
+.fourthRowInside{
+    background: white;
+    width: 90%;
+    height: 80%;
+    position: absolute;
+    top: 10%;
+    left: 5%;
+    box-shadow: 10px 10px 5px gray;
+    border-radius: 10px;
+    border: 2px solid #333;
+    text-align: center;
+}
+
+.firstRowTC,
+.secondRowTC,
+.thirdRowTC,
+.fourthRowTC{
+    position: relative;
+}
+.updateRole .updateRoleSelect{
+    width: 40%;
+}
+.addRole input,
+.deleteRole select,
+.updateRoleSelect input,
+.deleteStatus select,
+.addProject input,
+.deleteProject select,
+.deleteDivision select,
+.deleteElements select
+{
+
+    width: 75%;
+}
+
+.updateRole select,
+.updateRole input,
+
+.updateStatus select,
+.updateStatus input,
+
+.updateProject select,
+.updateProject input,
+
+.addDivision select,
+.addDivision input,
+
+.updateDivision select,
+.updateDivision input,
+
+.changeDivisionProject select,
+.changeDivisionProject input
+
+ {
+    width: 37.2%;
+}

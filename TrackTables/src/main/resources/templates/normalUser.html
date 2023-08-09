@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/jpeg" href="/ICONS/icon.png">
+    <link rel="stylesheet" href="/CSS/NormalUser/main.css">
+    <title>NormalUserPage</title>
+</head>
+<body>
+<div class="navbar">
+    <div class="navbar-left">
+        <select id="project" name="project">
+            <option value="" disabled selected>Wybierz projekt</option>
+
+            <!--            JavaScript          -->
+        </select>
+
+        <select id="dzial" name="dzial">
+            <option value="" disabled selected>Wybierz dział</option>
+            <!--            JavaScript          -->
+        </select>
+    </div>
+    <div class="navbar-right">
+        <button id="logoutButton">Wyloguj</button>
+    </div>
+</div>
+
+<div class="table">
+    <div class="tableInside scrollable">
+        <p>Tabela Elemntów</p>
+        <div class="elementsList">
+            <!-- Tabela z elementami zostanie tutaj umieszczona dynamicznie -->
+        </div>
+
+        <div class="elementDetails">
+            <!-- Szczegóły elementu zostaną tutaj wyświetlone dynamicznie -->
+        </div>
+    </div>
+
+</div>
+
+<div class="footer">
+    <p>Zalogowany użytkownik: <span id="loggedInUserEmail" th:text="${loggedInUserEmail}"></span></p>
+</div>
+
+<script type="text/javascript" src="/JS/normalUser/selectProjectsAndDivision.js"></script>
+<script type="text/javascript" src="/JS/normalUser/showAndUpdateTable.js"></script>
+<script type="text/javascript" src="/JS/login/login.js"></script>
+
+</body>
+</html>
