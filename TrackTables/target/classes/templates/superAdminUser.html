@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/CSS/SuperAdminUser/main.css">
+    <link rel="icon" type="image/jpeg" href="/ICONS/icon.png">
+    <title>SuperAdminUserPage</title>
+</head>
+<body>
+
+<div class="navbar">
+    <div class="navbar-left">
+        <p>Zalogowany użytkownik: <span id="loggedInUserEmail" th:text="${loggedInUserEmail}"></span></p>
+    </div>
+    <div class="navbar-right">
+        <button id="deleteButton">Wyczyść dziennik</button>
+        <button id="logoutButton">Wyloguj</button>
+    </div>
+</div>
+<div class="firstCol">
+    <div class="userRegister">
+        <div class="userRegisterInside">
+            <p>Dodaj nowego użytkownika</p>
+            <form id="userForm" action="/user/add" class="userFromRegister" method="post">
+                <div class="inputs-row">
+                    <div class="input-group">
+                        <input id="name" name="name" placeholder="Imię:">
+                        <input id="surname" name="surname" placeholder="Nazwisko:">
+                        <input type="password" id="password" name="password" placeholder="Hasło:"
+                               pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                               title="Musi zawierać co najmniej jedną cyfrę oraz jedną dużą i małą literę, oraz mieć co najmniej 8 lub więcej znaków.">
+                    </div>
+                </div>
+                <div class="inputs-row2">
+                    <div class="input-group2">
+                        <input id="email" name="email" type="email" placeholder="Email:">
+                        <select id="role" name="role">
+                            <option value="" disabled selected>Rola:</option>
+                            <!-- JavaScript -->
+                        </select>
+                    </div>
+                </div>
+                <button type="submit">Dodaj</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="userupdateRole">
+        <div class="userupdateRoleInside">
+            <p>Zmień użytnikowi obecną role</p>
+            <form action="/user/updateRole" class="userFromUpdateRole" method="post">
+                <select id="emailRole" name="emailRole">
+                    <option value="" disabled selected>Wybierz użytkownika:</option>
+                    <!-- JavaScript -->
+                </select><br>
+                <input type="text" id="currentRole" placeholder="Obecna rola:" readonly><br>
+                <select id="newRole" name="newRole">
+                    <option value="" disabled selected>Wybierz nową rolę:</option>
+                    <!-- JavaScript -->
+                </select><br>
+                <button type="submit" id="changeRoleButton">Zmień rolę</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="userUpdate">
+        <div class="userUpdateInside">
+            <p>Zaktualizuj dane użytkownika</p>
+            <form action="/user/update" class="userFromUpdate">
+                <select id="userId" name="id">
+                    <option value="" disabled selected>Wybierz użytkownika (ID)</option>
+                </select>
+                <div class="inputs-groupUpdate">
+                    <input type="text" id="nameUpdate" name="name" placeholder="Imię:"/><br>
+                    <input type="text" id="surnameUpdate" name="surname" placeholder="Nazwisko:"/><br>
+                    <input type="password" id="passwordUpdate" name="password" placeholder="Hasło:"
+                           pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                           title="Musi zawierać co najmniej jedną cyfrę oraz jedną dużą i małą literę, oraz mieć co najmniej 8 lub więcej znaków."/><br>
+                </div>
+                <input type="email" id="emailUpdate" name="email" placeholder="Adres e-mail:"/>
+                <button type="submit">Zaktualizuj użytkownika</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="userDelete">
+        <div class="userDeleteInside">
+            <p>Usuń wybranego użytkownika</p>
+            <form action="/user/delete" class="userFromDelete">
+                <div class="userDeleteInsideDiv">
+                    <select id="emailDelete" name="emailDelete">
+                        <option value="" disabled selected>Wybierz użytkownika do usunięcia:</option>
+                    </select><br>
+                    <button type="submit">Usuń użytkownika</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="secondCol">
+    <div class="firstRow">
+        <div class="firstRowInsideSecCol scrollable">
+            <p>Tabela Użytkowników</p>
+            <div class="userList">
+                <!-- JavaScript -->
+            </div>
+            <div class="userDetails">
+                <!-- JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <div class="secondRow">
+        <div class="secondRowInsideSecCol scrollable">
+            <p>Dzienniki audytu</p>
+            <div class="auditLog">
+                <!-- JavaScript -->
+            </div>
+            <div class="auditLogDetails">
+                <!-- JavaScript -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="thirdCol">
+    <div class="firstRowTC">
+        <div class="firstRowInside">
+            <p>Zarządaj rolami</p>
+            <div class="addRole">
+                <input type="text" id="newRoleName" placeholder="Nazwa roli">
+                <button id="addRoleButton">Dodaj</button>
+            </div>
+            <div class="deleteRole">
+                <select id="deleteRoleSelect">
+                    <option value="" disabled selected>Wybierz rolę do usunięcia</option>
+                </select>
+                <button id="deleteRoleButton">Usuń</button>
+            </div>
+            <div class="updateRole">
+                <select id="updateRoleSelect">
+                    <option value="" disabled selected>Wybierz rolę do aktualizacji</option>
+                </select>
+                <input type="text" id="updatedRoleName" placeholder="Nowa nazwa roli">
+                <button id="updateRoleButton">Zaktualizuj</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="secondRowTC">
+        <div class="secondRowInside">
+            <p>Zarządaj statusami</p>
+            <div class="updateRoleSelect">
+                <input type="text" id="newStatusName" placeholder="Nazwa statusu">
+                <button id="addStatusButton">Dodaj</button>
+            </div>
+            <div class="deleteStatus">
+                <select id="deleteStatusSelect">
+                    <option value="" disabled selected>Wybierz status do usuniecia</option>
+                </select>
+                <button id="deleteStatusButton">Usuń</button>
+            </div>
+            <div class="updateStatus">
+                <select id="updateStatusSelect">
+                    <option value="" disabled selected>Wybierz status do aktualizacji</option>
+                </select>
+                <input type="text" id="updatedStatusName" placeholder="Nowa nazwa statusu">
+                <button id="updateStatusButton">Aktualizuj</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="thirdRowTC">
+        <div class="thirdRowInside">
+            <p>Zarządaj projektami</p>
+            <div class="addProject">
+                <input type="text" id="newProject" placeholder="Nazwa projektu">
+                <button id="addProjectButton">Dodaj</button>
+            </div>
+            <div class="deleteProject">
+                <select id="deleteProjectSelect">
+                    <option value="" disabled selected>Wybierz projekt do usuniecia</option>
+                </select>
+                <button id="deleteProjectButton">Usuń</button>
+            </div>
+            <div class="updateProject">
+                <select id="updateProjectSelect">
+                    <option value="" disabled selected>Wybierz projekt do aktualizacji</option>
+                </select>
+                <input type="text" id="updateProjectName" placeholder="Nowa nazwa projektu">
+                <button id="updateProjectButton">Aktualizuj</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="fourthRowTC">
+        <div class="fourthRowInside">
+            <p>Zarządzaj działami i elementami</p>
+            <div class="addDivision">
+                <input type="text" id="newDivisionName" placeholder="Nazwa dzialu">
+                <select id="addDivisionProjectSelect">
+                    <option value="" disabled selected>Wybierz projekt</option>
+                </select>
+                <button id="addDivisionButton">Dodaj</button>
+            </div>
+            <div class="deleteDivision">
+                <select id="deleteDivisionSelect">
+                    <option value="" disabled selected>Wybierz dzial do usunięcia</option>
+                </select>
+                <button id="deleteDivisionButton">Usuń</button>
+            </div>
+            <div class="updateDivision">
+                <select id="updateDivisionSelect">
+                    <option value="" disabled selected>Wybierz dzial do aktualizacji</option>
+                </select>
+                <input type="text" id="updateDivisionName" placeholder="Nowa nazwa dywizji">
+                <button id="updateDivisionButton">Aktualizuj</button>
+            </div>
+
+            <div class="changeDivisionProject">
+                <select id="changeDivisionSelect">
+                    <option value="" disabled selected>Wybierz dzial</option>
+                </select>
+                <select id="changeProjectSelect">
+                    <option value="" disabled selected>Wybierz nowy projekt</option>
+                </select>
+                <button id="changeDivisionProjectButton">Zmień</button>
+            </div>
+
+            <div class="deleteElements">
+                <select id="deleteElementsSelect">
+                    <option value="" disabled selected>Wybierz element do usunięcia</option>
+                </select>
+                <button id="deleteElementButton">Usuń</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="footer">
+        <p>Kopiuj operacje z działu do drugiego dzialu</p>
+
+        <select id="dzialFrom">
+            <option value="">Wybierz dział:</option>
+        </select>
+        <select id="dzialTo">
+
+            <option value="">Skopjuj do działu:</option>
+        </select>
+
+        <button id="copyButton">Kopiuj</button>
+</div>
+
+
+</body>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript" src="/JS/login/login.js"></script>
+<script type="text/javascript" src="/JS/superAdminUser/copyElements.js"></script>
+<script type="text/javascript" src="/JS/superAdminUser/logsDelete.js"></script>
+<script type="text/javascript" src="/JS/superAdminUser/User/updateRole.js"></script>
+<script type="text/javascript" src="/JS/superAdminUser/User/updateUser.js"></script>
+<script type="text/javascript" src="/JS/superAdminUser/User/deleteUser.js"></script>
+<script type="text/javascript" src="/JS/superAdminUser/User/addUser.js"></script>
+<script type="text/javascript" src="/JS/superAdminUser/userList.js"></script>
+<script type="text/javascript" src="/JS/superAdminUser/logList.js"></script>
+<script type="text/javascript" src="/JS/superAdminUser/roles.js"></script>
+<script type="text/javascript" src="/JS/superAdminUser/statuses.js"></script>
+<script type="text/javascript" src="/JS/superAdminUser/projects.js"></script>
+<script type="text/javascript" src="/JS/superAdminUser/divisions.js"></script>
+<script type="text/javascript" src="/JS/superAdminUser/elements.js"></script>
+</html>
