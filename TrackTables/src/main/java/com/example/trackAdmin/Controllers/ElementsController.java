@@ -1,11 +1,7 @@
 package com.example.trackAdmin.Controllers;
 
-import com.example.trackAdmin.Classes.Division;
-import com.example.trackAdmin.Classes.Elements;
-import com.example.trackAdmin.Classes.Status;
-import com.example.trackAdmin.Respositories.DivisionRepository;
-import com.example.trackAdmin.Respositories.ElementsRepository;
-import com.example.trackAdmin.Respositories.StatusRepository;
+import com.example.trackAdmin.Classes.*;
+import com.example.trackAdmin.Respositories.*;
 import com.example.trackAdmin.Service.AuditLogService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,16 +31,16 @@ public class ElementsController {
     private AuditLogService auditLogService;
 
     @PostMapping(path = "/add")
-    public @ResponseBody String addNewElement(@RequestParam (required = false) String transaction,
-                                              @RequestParam (required = false) String description,
-                                              @RequestParam (required = false) String comment,
-                                              @RequestParam (required = false) String confirm_name,
-                                              @RequestParam (required = false) Integer statusId,
-                                              @RequestParam (required = false) String accomplish,
-                                              @RequestParam (required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate accomplish_date,
-                                              @RequestParam (required = false) String confirm,
-                                              @RequestParam (required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate confirm_date,
-                                              @RequestParam (required = false) Integer divisionId,
+    public @ResponseBody String addNewElement(@RequestParam(required = false) String transaction,
+                                              @RequestParam(required = false) String description,
+                                              @RequestParam(required = false) String comment,
+                                              @RequestParam(required = false) String confirm_name,
+                                              @RequestParam(required = false) Integer statusId,
+                                              @RequestParam(required = false) String accomplish,
+                                              @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate accomplish_date,
+                                              @RequestParam(required = false) String confirm,
+                                              @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate confirm_date,
+                                              @RequestParam(required = false) Integer divisionId,
                                               HttpSession session) {
         Elements elements = new Elements();
         elements.setTransaction(transaction);
@@ -63,7 +59,6 @@ public class ElementsController {
         Status status = new Status();
         status.setId(statusId);
         elements.setStatus(status);
-
 
 
         String loggedInUserEmail = (String) session.getAttribute("loggedInUserEmail");
@@ -135,14 +130,14 @@ public class ElementsController {
     }
 
     @DeleteMapping(path = "/delete")
-    public @ResponseBody String elemnentDelete(@RequestParam Integer id, HttpSession session){
+    public @ResponseBody String elemnentDelete(@RequestParam Integer id, HttpSession session) {
         Elements elementsDelete = elementsRepository.findById(id).orElse(null);
-        if(elementsDelete != null){
+        if (elementsDelete != null) {
             String loggedInUserEmail = (String) session.getAttribute("loggedInUserEmail");
             auditLogService.logDeleteElement(loggedInUserEmail, id);
             elementsRepository.delete(elementsDelete);
             return id + " zostalo usuiniete";
-        }else {
+        } else {
             return id + " nie istnieje";
         }
     }

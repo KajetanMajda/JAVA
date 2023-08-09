@@ -1,7 +1,7 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const deleteButton = document.getElementById('deleteButton');
 
-    deleteButton.addEventListener('click', function() {
+    deleteButton.addEventListener('click', function () {
         if (confirm("Czy na pewno chcesz usunąć zawartość tabeli?")) {
             fetch('/logs/clearLogs', {
                 method: 'DELETE'

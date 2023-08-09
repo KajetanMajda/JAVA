@@ -1,8 +1,7 @@
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     const elementsListDiv = document.querySelector('.elementsList');
     const elementDetailsDiv = document.querySelector('.elementDetails');
 
-    // Funkcja do pobierania i wyświetlania wszystkich elementów lub elementów z wybranej dywizji
     function fetchAndDisplayElements(divisionId = null) {
         fetch('/elements/all')
             .then(response => response.json())
@@ -11,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 elementsTable.classList.add('elementsTable');
 
                 const headerRow = elementsTable.insertRow();
-                const headerColumns = ['Ikona','Lp', 'Dział', 'Operacja', 'Opis', 'Uwagi', 'Status', 'Zrealizowane przez',
+                const headerColumns = ['Ikona', 'Lp', 'Dział', 'Operacja', 'Opis', 'Uwagi', 'Status', 'Zrealizowane przez',
                     'Data realizacji', 'Zatwierdzone przez', 'Data zatwierdzenia', 'Zaktualizuj'];
                 headerColumns.forEach(column => {
                     const th = document.createElement('th');
@@ -47,7 +46,6 @@ document.addEventListener("DOMContentLoaded", function() {
                         statusCell.appendChild(statusSelect);
 
 
-                        // Pobierz i dodaj opcje statusów do rozwijanej listy
                         fetch("/status/all")
                             .then(response => response.json())
                             .then(statuses => {
@@ -58,7 +56,6 @@ document.addEventListener("DOMContentLoaded", function() {
                                     statusSelect.appendChild(option);
                                 });
 
-                                // Ustaw początkowy wybór statusu
                                 statusSelect.value = element.status.id;
 
                             })
@@ -82,7 +79,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     }
                 });
 
-                const newRow = elementsTable.insertRow(); // Dodaj pusty wiersz na dodawanie elementów
+                const newRow = elementsTable.insertRow();
                 newRow.innerHTML = `
 
                     <td><img src="/ICONS/5.png" alt="x" width="50" height="50"></td>
@@ -91,8 +88,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     <td>
                         <select class="input-division">
                             <option value="">Wybierz dywizję</option>
-                            <!-- Pobierz i dodaj opcje dywizji do rozwijanej listy -->
-                            <!-- Zostaw puste, zostanie uzupełnione przy załadowaniu -->
+                            <!--            JavaScript          -->
                         </select>
                     </td>
                     <td><input class="input-transaction" type="text"></td>
@@ -100,8 +96,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     <td><textarea class="textarea-comment"></textarea></td>
                     <td>
                         <select class="input-status">
-                            <!-- Pobierz i dodaj opcje statusów do rozwijanej listy -->
-                            <!-- Zostaw puste, zostanie uzupełnione przy załadowaniu -->
+                            <!--            JavaScript          -->
                         </select>
                     </td>
                     <td><input class="input-accomplish" type="text"></td>
@@ -112,10 +107,9 @@ document.addEventListener("DOMContentLoaded", function() {
                 newRow.classList.add('elementRow', 'new-row');
                 elementsTable.appendChild(newRow);
 
-                elementsListDiv.innerHTML = ''; // Wyczyść zawartość przed dodaniem nowej tabeli
+                elementsListDiv.innerHTML = '';
                 elementsListDiv.appendChild(elementsTable);
 
-                // Pobierz i dodaj opcje dywizji do rozwijanej listy
                 const divisionSelect = newRow.querySelector('.input-division');
                 fetch("/division/all")
                     .then(response => response.json())
@@ -131,7 +125,6 @@ document.addEventListener("DOMContentLoaded", function() {
                         console.error("Błąd pobierania dywizji:", error);
                     });
 
-                // Pobierz i dodaj opcje statusów do rozwijanej listy
                 const statusSelect = newRow.querySelector('.input-status');
                 fetch("/status/all")
                     .then(response => response.json())
@@ -141,7 +134,7 @@ document.addEventListener("DOMContentLoaded", function() {
                             option.value = status.id;
                             option.textContent = status.name;
 
-                            if(status.id === 5){
+                            if (status.id === 5) {
                                 option.selected = true;
                             }
 
@@ -158,35 +151,23 @@ document.addEventListener("DOMContentLoaded", function() {
             });
     }
 
-    // Wywołanie funkcji przy starcie strony
+
     fetchAndDisplayElements();
     const dzialSelect = document.getElementById("dzial");
 
-    // Reakcja na zmianę wybranego działu
-    dzialSelect.addEventListener("change", function() {
+
+    dzialSelect.addEventListener("change", function () {
         var selectedOption = dzialSelect.options[dzialSelect.selectedIndex];
         var selectedDzialId = selectedOption.value;
 
         if (selectedDzialId === "") {
-            // Jeśli wybrano opcję "Wybierz wszystko", wyświetl wszystkie elementy
             fetchAndDisplayElements();
         } else {
-            // W przeciwnym razie, wyświetl tylko elementy z wybranej dywizji
             fetchAndDisplayElements(selectedDzialId);
         }
     });
 
-
-    function fetchStatusName(statusId) {
-        return fetch("/status/all")
-            .then(response => response.json())
-            .then(statuses => {
-                const foundStatus = statuses.find(status => status.id === statusId);
-                return foundStatus ? foundStatus.name : "";
-            });
-    }
-
-    elementsListDiv.addEventListener('click', function(event) {
+    elementsListDiv.addEventListener('click', function (event) {
         if (event.target.parentElement.classList.contains('elementRow')) {
             const selectedId = event.target.parentElement.cells[1].textContent;
 
@@ -201,7 +182,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    elementsListDiv.addEventListener('click', function(event) {
+    elementsListDiv.addEventListener('click', function (event) {
         if (event.target.classList.contains('save-button')) {
             const row = event.target.parentElement.parentElement;
             const id = row.cells[1].textContent;
@@ -242,7 +223,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     .then(response => response.text())
                     .then(data => {
                         console.log(data);
-                        location.reload(); // Odśwież tabelę elementów
+                        location.reload();
                     })
                     .catch(error => {
                         console.error('Błąd aktualizacji elementu:', error);
@@ -251,10 +232,9 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    elementsListDiv.addEventListener('click', function(event) {
+    elementsListDiv.addEventListener('click', function (event) {
         if (event.target.classList.contains('add-button')) {
             const newRow = event.target.parentElement.parentElement;
-            // const inputId = newRow.querySelector('.input-id');
 
             const confirmMessages = "Czy na pewno chcesz dodać element?";
             const isConfirmedAdd = window.confirm(confirmMessages);
@@ -270,7 +250,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 const inputConfirmDate = newRow.querySelector('.input-confirm-date');
 
                 const formData = new URLSearchParams();
-                // formData.append('id', inputId.value);
                 formData.append('divisionId', inputDivision.value);
                 formData.append('transaction', inputTransaction.value);
                 formData.append('description', textareaDescription.value);

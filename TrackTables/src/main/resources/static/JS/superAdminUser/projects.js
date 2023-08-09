@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const updateProjectSelect = document.getElementById('updateProjectSelect');
     const updatedProjectNameInput = document.getElementById('updateProjectName');
 
-    // Pobierz i wypełnij listę projektów
     fetch('/projects/all')
         .then(response => response.json())
         .then(data => {
@@ -29,7 +28,6 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Błąd pobierania projektów:', error);
         });
 
-    // Obsługa dodawania projektu
     addProjectButton.addEventListener('click', function() {
         const projectName = newProjectNameInput.value;
         if (projectName) {
@@ -54,7 +52,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Obsługa usuwania projektu
     deleteProjectButton.addEventListener('click', function() {
         const selectedProject = deleteProjectSelect.value;
         if (selectedProject) {
@@ -75,7 +72,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Obsługa aktualizacji projektu
     updateProjectButton.addEventListener('click', function() {
         const selectedProjectId = updateProjectSelect.value;
         const updatedProjectName = updatedProjectNameInput.value;
@@ -87,7 +83,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     .then(response => response.text())
                     .then(data => {
                         console.log(data);
-                        // Odśwież listę projektów
                         location.reload();
                     })
                     .catch(error => {

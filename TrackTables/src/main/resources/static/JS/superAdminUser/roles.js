@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const addRoleButton = document.getElementById('addRoleButton');
     const newRoleNameInput = document.getElementById('newRoleName');
 
@@ -6,12 +6,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const deleteRoleSelect = document.getElementById('deleteRoleSelect');
 
 
-    // Pobierz i wypełnij listę ról
     fetch('/userRole/allRoles')
         .then(response => response.json())
         .then(data => {
             data.forEach(role => {
-                if (role !== 'Super_Admin_User'){
+                if (role !== 'Super_Admin_User') {
                     const deleteOption = document.createElement('option');
                     deleteOption.value = role;
                     deleteOption.textContent = role;
@@ -24,8 +23,8 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Błąd pobierania ról:', error);
         });
 
-    // Obsługa dodawania roli
-    addRoleButton.addEventListener('click', function() {
+
+    addRoleButton.addEventListener('click', function () {
         const roleName = newRoleNameInput.value;
         console.log('Próbuję dodać rolę:', roleName);
         if (roleName) {
@@ -50,8 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Obsługa usuwania roli
-    deleteRoleButton.addEventListener('click', function() {
+    deleteRoleButton.addEventListener('click', function () {
         const selectedRole = deleteRoleSelect.value;
         if (selectedRole) {
             if (window.confirm(`Czy na pewno chcesz usunąć rolę: ${selectedRole}?`)) {
@@ -73,8 +71,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 });
 
-// Obsługa aktualizacji statusu
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const updateRoleButton = document.getElementById('updateRoleButton');
     const updateRoleSelect = document.getElementById('updateRoleSelect');
     const updatedRoleNameInput = document.getElementById('updatedRoleName');
@@ -93,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Błąd pobierania ról:', error);
         });
 
-    updateRoleButton.addEventListener('click', function() {
+    updateRoleButton.addEventListener('click', function () {
         const selectedRoleId = updateRoleSelect.value;
         const updatedRoleName = updatedRoleNameInput.value;
         if (selectedRoleId && updatedRoleName) {
@@ -104,7 +101,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     .then(response => response.text())
                     .then(data => {
                         console.log(data);
-                        // Odśwież listę ról
                         location.reload();
                     })
                     .catch(error => {

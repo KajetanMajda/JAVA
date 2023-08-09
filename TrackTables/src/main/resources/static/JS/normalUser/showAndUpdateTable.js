@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 elementsTable.classList.add('elementsTable');
 
                 const headerRow = elementsTable.insertRow();
-                const headerColumns = ['Ikona','Lp', 'Dział', 'Operacja', 'Opis', 'Uwagi', 'Status', 'Zrealizowane przez',
+                const headerColumns = ['Ikona', 'Lp', 'Dział', 'Operacja', 'Opis', 'Uwagi', 'Status', 'Zrealizowane przez',
                     'Data realizacji', 'Zatwierdzone przez ', 'Data zatwierdzenia', 'Zaktualizuj'];
                 headerColumns.forEach(column => {
                     const th = document.createElement('th');
@@ -81,11 +81,11 @@ document.addEventListener("DOMContentLoaded", function () {
             });
     }
 
-    // Wywołanie funkcji przy starcie strony
+
     fetchAndDisplayElements();
     const dzialSelect = document.getElementById("dzial");
 
-    // Reakcja na zmianę wybranego działu
+
     dzialSelect.addEventListener("change", function () {
         var selectedOption = dzialSelect.options[dzialSelect.selectedIndex];
         var selectedDzialId = selectedOption.value;
@@ -141,7 +141,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 formData.append('accomplish_date', inputAccomplishDate.value);
 
 
-
                 fetch(`/elements/update`, {
                     method: 'PUT',
                     headers: {
@@ -152,7 +151,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     .then(response => response.text())
                     .then(data => {
                         console.log(data);
-                        location.reload(); // Odśwież tabelę elementów
+                        location.reload();
                     })
                     .catch(error => {
                         console.error('Błąd aktualizacji elementu:', error);

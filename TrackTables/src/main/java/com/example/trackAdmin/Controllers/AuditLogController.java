@@ -1,13 +1,15 @@
 package com.example.trackAdmin.Controllers;
 
-import com.example.trackAdmin.Classes.AuditLog;
-import com.example.trackAdmin.Respositories.AuditLogRepository;
+import com.example.trackAdmin.Classes.*;
+import com.example.trackAdmin.Respositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
 @Controller
 @RequestMapping(path = "/logs")
 public class AuditLogController {
+
     @Autowired
     private AuditLogRepository auditLogRepository;
 
@@ -17,6 +19,7 @@ public class AuditLogController {
         auditLogRepository.deleteAll();
         return "redirect:/user/superAdminUser";
     }
+
 
     @GetMapping(path = "/all")
     public @ResponseBody Iterable<AuditLog> getAllElements() {

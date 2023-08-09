@@ -1,11 +1,10 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const addStatusButton = document.getElementById('addStatusButton');
     const newStatusNameInput = document.getElementById('newStatusName');
 
     const deleteStatusButton = document.getElementById('deleteStatusButton');
     const deleteStatusSelect = document.getElementById('deleteStatusSelect');
 
-    // Pobierz i wypełnij listę statusów
     fetch('/status/all')
         .then(response => response.json())
         .then(data => {
@@ -20,8 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Błąd pobierania statusów:', error);
         });
 
-    // Obsługa dodawania statusu
-    addStatusButton.addEventListener('click', function() {
+    addStatusButton.addEventListener('click', function () {
         const statusName = newStatusNameInput.value;
         if (statusName) {
             if (window.confirm(`Czy na pewno chcesz dodać nowy status: ${statusName}?`)) {
@@ -45,8 +43,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Obsługa usuwania statusu
-    deleteStatusButton.addEventListener('click', function() {
+    deleteStatusButton.addEventListener('click', function () {
         const selectedStatus = deleteStatusSelect.value;
         if (selectedStatus) {
             if (window.confirm('Czy na pewno chcesz usunąć ten status?')) {
@@ -67,8 +64,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// obsługa aktualizacji statusu
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const updateStatusButton = document.getElementById('updateStatusButton');
     const updateStatusSelect = document.getElementById('updateStatusSelect');
     const updatedStatusNameInput = document.getElementById('updatedStatusName');
@@ -87,7 +83,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Błąd pobierania statusów:', error);
         });
 
-    updateStatusButton.addEventListener('click', function() {
+    updateStatusButton.addEventListener('click', function () {
         const selectedStatusId = updateStatusSelect.value;
         const updatedStatusName = updatedStatusNameInput.value;
         if (selectedStatusId && updatedStatusName) {
@@ -98,7 +94,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     .then(response => response.text())
                     .then(data => {
                         console.log(data);
-                        // Odśwież listę statusów
                         location.reload();
                     })
                     .catch(error => {

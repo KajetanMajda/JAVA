@@ -1,15 +1,10 @@
 package com.example.trackAdmin.Controllers;
 
-import com.example.trackAdmin.Classes.Division;
-import com.example.trackAdmin.Classes.Projects;
-import com.example.trackAdmin.Respositories.DivisionRepository;
-import com.example.trackAdmin.Respositories.ProjectsRepository;
+import com.example.trackAdmin.Classes.*;
+import com.example.trackAdmin.Respositories.*;
 import com.example.trackAdmin.Service.AuditLogService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import java.util.Optional;
-
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -39,7 +34,7 @@ public class ProjectsController {
     @PutMapping("/update")
     public @ResponseBody String projectsUpdate(@RequestParam Integer id,
                                                @RequestParam String name,
-                                               HttpSession session){
+                                               HttpSession session) {
         Projects projectUpdate = projectsRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono projektu o podanym id: " + id));
 
@@ -52,14 +47,14 @@ public class ProjectsController {
 
     @DeleteMapping(path = "/delete")
     public @ResponseBody String projectDelete(@RequestParam String name,
-                                              HttpSession session){
+                                              HttpSession session) {
         Projects projectDelete = projectsRepository.findByName(name);
-        if(projectDelete != null){
+        if (projectDelete != null) {
             String loggedInUserEmail = (String) session.getAttribute("loggedInUserEmail");
             auditLogService.logDeleteProject(loggedInUserEmail);
             projectsRepository.delete(projectDelete);
             return "Projekt o nazwie: " + name + " zostal usuniety";
-        }else{
+        } else {
             return "Nie udalo sie";
         }
 

@@ -1,16 +1,12 @@
 package com.example.trackAdmin.Controllers;
 
-import com.example.trackAdmin.Classes.Division;
-import com.example.trackAdmin.Classes.Projects;
-import com.example.trackAdmin.Respositories.DivisionRepository;
-import com.example.trackAdmin.Respositories.ElementsRepository;
-import com.example.trackAdmin.Respositories.ProjectsRepository;
+import com.example.trackAdmin.Classes.*;
+import com.example.trackAdmin.Respositories.*;
 import com.example.trackAdmin.Service.AuditLogService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 
 @RestController
@@ -66,11 +62,10 @@ public class DivisionController {
     }
 
 
-
     @PutMapping("/update")
     public @ResponseBody String divisionUpdate(@RequestParam Integer id,
                                                @RequestParam String name,
-                                               HttpSession session){
+                                               HttpSession session) {
         Division divisionUpdate = divisionRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono projektu o podanym id: " + id));
 
@@ -83,14 +78,14 @@ public class DivisionController {
 
     @DeleteMapping(path = "/delete")
     public @ResponseBody String projectDelete(@RequestParam String name,
-                                              HttpSession session){
+                                              HttpSession session) {
         Division divisionDelete = divisionRepository.findByName(name);
-        if(divisionDelete != null){
+        if (divisionDelete != null) {
             String loggedInUserEmail = (String) session.getAttribute("loggedInUserEmail");
             auditLogService.logDeleteDivision(loggedInUserEmail);
             divisionRepository.delete(divisionDelete);
             return "Projekt o nazwie: " + name + " zostal usuniety";
-        }else{
+        } else {
             return "Nie udalo sie";
         }
 

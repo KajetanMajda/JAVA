@@ -1,35 +1,32 @@
-
 document.addEventListener('DOMContentLoaded', function () {
-async function fetchAndFillSelectOptions() {
-    try {
-        const response = await fetch('/division/all'); // Zmień na odpowiedni URL endpointa
-        const data = await response.json();
+    async function fetchAndFillSelectOptions() {
+        try {
+            const response = await fetch('/division/all'); // Zmień na odpowiedni URL endpointa
+            const data = await response.json();
 
-        const dzialFromSelect = document.getElementById('dzialFrom');
-        const dzialToSelect = document.getElementById('dzialTo');
+            const dzialFromSelect = document.getElementById('dzialFrom');
+            const dzialToSelect = document.getElementById('dzialTo');
 
-        // Wypełnianie opcji wyboru dla dzialFrom
-        data.forEach(item => {
-            const option = document.createElement('option');
-            option.value = item.id;
-            option.textContent = `${item.id} - ${item.name}`;
-            dzialFromSelect.appendChild(option);
-        });
+            data.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.id;
+                option.textContent = `${item.id} - ${item.name}`;
+                dzialFromSelect.appendChild(option);
+            });
 
-        // Wypełnianie opcji wyboru dla dzialTo (możesz użyć tego samego zestawu danych)
-        data.forEach(item => {
-            const option = document.createElement('option');
-            option.value = item.id;
-            option.textContent = `${item.id} - ${item.name}`;
-            dzialToSelect.appendChild(option);
-        });
+            data.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.id;
+                option.textContent = `${item.id} - ${item.name}`;
+                dzialToSelect.appendChild(option);
+            });
 
-    } catch (error) {
-        console.error('Błąd podczas pobierania danych:', error);
+        } catch (error) {
+            console.error('Błąd podczas pobierania danych:', error);
+        }
     }
-}
 
-fetchAndFillSelectOptions();
+    fetchAndFillSelectOptions();
 
     const copyButton = document.getElementById('copyButton');
     copyButton.addEventListener('click', async function () {
@@ -64,7 +61,6 @@ fetchAndFillSelectOptions();
                         throw new Error('Błąd kopiowania danych');
                     }
 
-                    // Aktualizuj widok po udanej operacji
                     fetchAndDisplayElements();
                 } catch (error) {
                     console.error('Błąd kopiowania danych:', error);
@@ -74,5 +70,4 @@ fetchAndFillSelectOptions();
             alert('Wybierz obie dywizje.');
         }
     });
-    // ... (inne fragmenty kodu)
 });
