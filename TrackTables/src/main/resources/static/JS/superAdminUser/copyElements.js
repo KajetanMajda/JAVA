@@ -1,24 +1,24 @@
 document.addEventListener('DOMContentLoaded', function () {
     async function fetchAndFillSelectOptions() {
         try {
-            const response = await fetch('/division/all'); // Zmień na odpowiedni URL endpointa
-            const data = await response.json();
+            const response = await fetch('/projects/all'); // Zmień na odpowiedni URL endpointa
+            const projects = await response.json();
 
-            const dzialFromSelect = document.getElementById('dzialFrom');
-            const dzialToSelect = document.getElementById('dzialTo');
+            const projectFromSelect = document.getElementById('projectFrom');
+            const projectToSelect = document.getElementById('projectTo');
 
-            data.forEach(item => {
+            projects.forEach(project => {
                 const option = document.createElement('option');
-                option.value = item.id;
-                option.textContent = `${item.id} - ${item.name}`;
-                dzialFromSelect.appendChild(option);
+                option.value = project.id;
+                option.textContent = `${project.id} - ${project.name}`;
+                projectFromSelect.appendChild(option);
             });
 
-            data.forEach(item => {
+            projects.forEach(project => {
                 const option = document.createElement('option');
-                option.value = item.id;
-                option.textContent = `${item.id} - ${item.name}`;
-                dzialToSelect.appendChild(option);
+                option.value = project.id;
+                option.textContent = `${project.id} - ${project.name}`;
+                projectToSelect.appendChild(option);
             });
 
         } catch (error) {
@@ -26,48 +26,50 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    fetchAndFillSelectOptions();
+    fetchAndFillSelectOptions()
+
 
     const copyButton = document.getElementById('copyButton');
-    copyButton.addEventListener('click', async function () {
-        const dzialFromSelect = document.getElementById('dzialFrom');
-        const dzialToSelect = document.getElementById('dzialTo');
 
-        const selectedDzialFromId = dzialFromSelect.value;
-        const selectedDzialToId = dzialToSelect.value;
+    let sourceProjectId = null;
+    let targetProjectId = null;
 
-        if (selectedDzialFromId && selectedDzialToId) {
-            const confirmMessage = "Czy na pewno chcesz skopiować dane?";
-            const isConfirmed = window.confirm(confirmMessage);
+    copyButton.addEventListener('click', function () {
+        const projectFromSelect = document.getElementById('projectFrom');
+        const projectToSelect = document.getElementById('projectTo');
 
-            if (isConfirmed) {
-                try {
-                    const response = await fetch(`/elements/getToCopy/${selectedDzialFromId}`);
-                    if (!response.ok) {
-                        throw new Error('Błąd pobierania danych');
-                    }
+        sourceProjectId = projectFromSelect.value;
+        targetProjectId = projectToSelect.value;
 
-                    const transactions = await response.json();
+        if (!sourceProjectId || !targetProjectId) {
+            alert('Wybierz projekt źródłowy i docelowy.');
+            return;
+        }
 
-                    const copyResponse = await fetch(`/elements/copy?divisionIdTo=${selectedDzialToId}`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(transactions)
-                    });
+        const confirmMessage = `Czy na pewno chcesz skopiować projekt ${sourceProjectId} do projektu ${targetProjectId}?`;
+        const isConfirmed = window.confirm(confirmMessage);
 
-                    if (!copyResponse.ok) {
-                        throw new Error('Błąd kopiowania danych');
-                    }
-
-                    fetchAndDisplayElements();
-                } catch (error) {
-                    console.error('Błąd kopiowania danych:', error);
-                }
-            }
-        } else {
-            alert('Wybierz obie dywizje.');
+        if (isConfirmed) {
+            copyProject(sourceProjectId, targetProjectId);
         }
     });
+
+    async function copyProject(sourceProjectId, targetProjectId) {
+        try {
+            const response = await fetch(`/projects/copy?sourceProjectId=${sourceProjectId}&targetProjectId=${targetProjectId}`, {
+                method: 'POST'
+            });
+
+            if (!response.ok) {
+                throw new Error('Błąd kopiowania projektu.');
+            }
+
+            alert('Projekt został skopiowany wraz z dywizjami i elementami.');
+            location.reload();
+
+        } catch (error) {
+            console.error('Błąd kopiowania projektu:', error);
+        }
+    }
+
 });

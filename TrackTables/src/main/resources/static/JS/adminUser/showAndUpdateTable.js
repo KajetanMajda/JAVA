@@ -2,6 +2,26 @@ document.addEventListener("DOMContentLoaded", function () {
     const elementsListDiv = document.querySelector('.elementsList');
     const elementDetailsDiv = document.querySelector('.elementDetails');
 
+
+    const saveAllButton = document.querySelector('#saveAll');
+
+    // Nasłuchuj na zdarzenie "click" na przycisku "Zapisz wszytsko"
+    saveAllButton.addEventListener('click', function () {
+
+        const confirmMessages = "Czy napewno chcesz zapisać wszystkie zmiany?";
+        const isConfirmed = window.confirm(confirmMessages);
+
+        if (isConfirmed) {
+        const saveButtons = document.querySelectorAll('.save-button');
+
+        saveButtons.forEach(saveButton => {
+            saveButton.click(); // Symuluj kliknięcie przycisku "Zapisz" dla każdego rzędu
+        });
+
+    }
+    });
+
+
     function fetchAndDisplayElements(divisionId = null) {
         fetch('/elements/all')
             .then(response => response.json())
@@ -18,8 +38,10 @@ document.addEventListener("DOMContentLoaded", function () {
                     headerRow.appendChild(th);
                 });
 
+
+
                 document.addEventListener("input", function(event) {
-                    if (event.target && event.target.id === "expand") {
+                    if (event.target && event.target.id === "text") {
                         autoExpandTextarea(event.target);
                     }
                 });
@@ -29,6 +51,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     textarea.style.height = "auto";
                     textarea.style.height = (textarea.scrollHeight) + "px";
                 }
+
                 data.forEach((element) => {
                     if (!divisionId || element.division.id == divisionId) {
                         const row = elementsTable.insertRow();
@@ -48,8 +71,8 @@ document.addEventListener("DOMContentLoaded", function () {
                         idCell.textContent = element.id;
                         imageCell.innerHTML = `<img src="/ICONS/${element.status.id}.png" alt="x" width="50" height="50">`;
                         transactionCell.innerHTML = `<input class="input-transaction" type="text" value="${element.transaction || ''}">`
-                        descriptionCell.innerHTML = `<textarea id="expand" class="textarea-description">${element.description || ''}</textarea>`
-                        commentCell.innerHTML = `<textarea id="expand" class="textarea-comment">${element.comment || ''}</textarea>`
+                        descriptionCell.innerHTML = `<textarea id="text" class="textarea-description">${element.description || ''}</textarea>`
+                        commentCell.innerHTML = `<textarea id="text" class="textarea-comment">${element.comment || ''}</textarea>`
                         divisionCell.textContent = element.division.name;
 
                         const statusSelect = document.createElement("select");
@@ -130,8 +153,8 @@ document.addEventListener("DOMContentLoaded", function () {
                         </select>
                     </td>
                     <td><input class="input-transaction" type="text"></td>
-                    <td><textarea id="expand" class="textarea-description"></textarea></td>
-                    <td><textarea id="expand" class="textarea-comment"></textarea></td>
+                    <td><textarea id="text" class="textarea-description"></textarea></td>
+                    <td><textarea id="text" class="textarea-comment"></textarea></td>
                     <td>
                         <select class="input-status">
                             <!--            JavaScript          -->
@@ -225,10 +248,10 @@ document.addEventListener("DOMContentLoaded", function () {
             const row = event.target.parentElement.parentElement;
             const id = row.cells[1].textContent;
 
-            const confirmMessages = "Czy napewno chcesz zapisać zmiany?";
-            const isConfirmed = window.confirm(confirmMessages);
+            // const confirmMessages = "Czy napewno chcesz zapisać zmiany?";
+            // const isConfirmed = window.confirm(confirmMessages);
 
-            if (isConfirmed) {
+            // if (isConfirmed) {
 
                 const inputTransaction = row.querySelector('.input-transaction');
                 const textareaDescription = row.querySelector('.textarea-description');
@@ -261,12 +284,18 @@ document.addEventListener("DOMContentLoaded", function () {
                     .then(response => response.text())
                     .then(data => {
                         console.log(data);
-                        location.reload();
+
+                        for (const field in inputFields) {
+                            const columnIndex = Array.from(row.cells).findIndex(cell => cell.classList.contains(field));
+                            if (columnIndex !== -1) {
+                                row.cells[columnIndex].textContent = inputFields[field];
+                            }
+                        }
                     })
                     .catch(error => {
                         console.error('Błąd aktualizacji elementu:', error);
                     });
-            }
+            // }
         }
     });
 

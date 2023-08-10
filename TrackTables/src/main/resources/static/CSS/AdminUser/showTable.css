@@ -102,7 +102,6 @@ table {
 
     resize: none;
     overflow: hidden;
-    height: auto;
     transition: height 0.2s;
 }
 
