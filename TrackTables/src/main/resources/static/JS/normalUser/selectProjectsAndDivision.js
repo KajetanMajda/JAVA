@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
         var selectedProjectId = projectSelect.value;
 
         dzialSelect.innerHTML = "";
-        addOption(dzialSelect, "", "Wybierz wszystko");
+        addOption(dzialSelect, "", "Wybierz wszystko", "all");
 
         if (selectedProjectId !== "") {
             fetch("/division/all")

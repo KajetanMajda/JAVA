@@ -12,13 +12,13 @@ document.addEventListener("DOMContentLoaded", function () {
         const isConfirmed = window.confirm(confirmMessages);
 
         if (isConfirmed) {
-        const saveButtons = document.querySelectorAll('.save-button');
+            const saveButtons = document.querySelectorAll('.save-button');
 
-        saveButtons.forEach(saveButton => {
-            saveButton.click(); // Symuluj kliknięcie przycisku "Zapisz" dla każdego rzędu
-        });
+            saveButtons.forEach(saveButton => {
+                saveButton.click(); // Symuluj kliknięcie przycisku "Zapisz" dla każdego rzędu
+            });
 
-    }
+        }
     });
 
 
@@ -253,48 +253,48 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // if (isConfirmed) {
 
-                const inputTransaction = row.querySelector('.input-transaction');
-                const textareaDescription = row.querySelector('.textarea-description');
-                const textareaComment = row.querySelector('.textarea-comment');
-                const inputStatus = row.querySelector('.input-status');
-                const inputAccomplish = row.querySelector('.input-accomplish');
-                const inputAccomplishDate = row.querySelector('.input-accomplish-date');
-                const inputConfirmName = row.querySelector('.input-confirm-name');
-                const inputConfirmDate = row.querySelector('.input-confirm-date');
-                const formData = new URLSearchParams();
+            const inputTransaction = row.querySelector('.input-transaction');
+            const textareaDescription = row.querySelector('.textarea-description');
+            const textareaComment = row.querySelector('.textarea-comment');
+            const inputStatus = row.querySelector('.input-status');
+            const inputAccomplish = row.querySelector('.input-accomplish');
+            const inputAccomplishDate = row.querySelector('.input-accomplish-date');
+            const inputConfirmName = row.querySelector('.input-confirm-name');
+            const inputConfirmDate = row.querySelector('.input-confirm-date');
+            const formData = new URLSearchParams();
 
-                formData.append('id', id);
-                formData.append('transaction', inputTransaction.value);
-                formData.append('description', textareaDescription.value);
-                formData.append('comment', textareaComment.value);
-                formData.append('statusId', inputStatus.value);
-                formData.append('accomplish', inputAccomplish.value);
-                formData.append('accomplish_date', inputAccomplishDate.value);
-                formData.append('confirm_name', inputConfirmName.value);
-                formData.append('confirm_date', inputConfirmDate.value);
+            formData.append('id', id);
+            formData.append('transaction', inputTransaction.value);
+            formData.append('description', textareaDescription.value);
+            formData.append('comment', textareaComment.value);
+            formData.append('statusId', inputStatus.value);
+            formData.append('accomplish', inputAccomplish.value);
+            formData.append('accomplish_date', inputAccomplishDate.value);
+            formData.append('confirm_name', inputConfirmName.value);
+            formData.append('confirm_date', inputConfirmDate.value);
 
 
-                fetch(`/elements/update`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: formData.toString()
-                })
-                    .then(response => response.text())
-                    .then(data => {
-                        console.log(data);
+            fetch(`/elements/update`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: formData.toString()
+            })
+                .then(response => response.text())
+                .then(data => {
+                    console.log(data);
 
-                        for (const field in inputFields) {
-                            const columnIndex = Array.from(row.cells).findIndex(cell => cell.classList.contains(field));
-                            if (columnIndex !== -1) {
-                                row.cells[columnIndex].textContent = inputFields[field];
-                            }
+                    for (const field in inputFields) {
+                        const columnIndex = Array.from(row.cells).findIndex(cell => cell.classList.contains(field));
+                        if (columnIndex !== -1) {
+                            row.cells[columnIndex].textContent = inputFields[field];
                         }
-                    })
-                    .catch(error => {
-                        console.error('Błąd aktualizacji elementu:', error);
-                    });
+                    }
+                })
+                .catch(error => {
+                    console.error('Błąd aktualizacji elementu:', error);
+                });
             // }
         }
     });

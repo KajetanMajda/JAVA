@@ -2,6 +2,24 @@ document.addEventListener("DOMContentLoaded", function () {
     const elementsListDiv = document.querySelector('.elementsList');
     const elementDetailsDiv = document.querySelector('.elementDetails');
 
+    const saveAllButton = document.querySelector('#saveAll');
+
+    // Nasłuchuj na zdarzenie "click" na przycisku "Zapisz wszytsko"
+    saveAllButton.addEventListener('click', function () {
+
+        const confirmMessages = "Czy napewno chcesz zapisać wszystkie zmiany?";
+        const isConfirmed = window.confirm(confirmMessages);
+
+        if (isConfirmed) {
+            const saveButtons = document.querySelectorAll('.save-button');
+
+            saveButtons.forEach(saveButton => {
+                saveButton.click(); // Symuluj kliknięcie przycisku "Zapisz" dla każdego rzędu
+            });
+
+        }
+    });
+
     function fetchAndDisplayElements(divisionId = null) {
         fetch('/elements/all')
             .then(response => response.json())
