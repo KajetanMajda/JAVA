@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const auditLogTable = document.createElement('table');
     auditLogTable.classList.add('auditLogTable');
     const auditLogDetailsDiv = document.querySelector('.auditLogDetails');
@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Błąd pobierania danych audytu:', error);
         });
 
-    auditLogTable.addEventListener('click', function(event) {
+    auditLogTable.addEventListener('click', function (event) {
         if (event.target.parentElement.classList.contains('auditLogRow')) {
             const selectedId = event.target.parentElement.cells[0].textContent;
 

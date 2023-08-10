@@ -1,8 +1,27 @@
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     const elementsListDiv = document.querySelector('.elementsList');
     const elementDetailsDiv = document.querySelector('.elementDetails');
 
-    // Funkcja do pobierania i wyświetlania wszystkich elementów lub elementów z wybranej dywizji
+
+    const saveAllButton = document.querySelector('#saveAll');
+
+    // Nasłuchuj na zdarzenie "click" na przycisku "Zapisz wszytsko"
+    saveAllButton.addEventListener('click', function () {
+
+        const confirmMessages = "Czy napewno chcesz zapisać wszystkie zmiany?";
+        const isConfirmed = window.confirm(confirmMessages);
+
+        if (isConfirmed) {
+            const saveButtons = document.querySelectorAll('.save-button');
+
+            saveButtons.forEach(saveButton => {
+                saveButton.click(); // Symuluj kliknięcie przycisku "Zapisz" dla każdego rzędu
+            });
+
+        }
+    });
+
+
     function fetchAndDisplayElements(divisionId = null) {
         fetch('/elements/all')
             .then(response => response.json())
@@ -11,13 +30,27 @@ document.addEventListener("DOMContentLoaded", function() {
                 elementsTable.classList.add('elementsTable');
 
                 const headerRow = elementsTable.insertRow();
-                const headerColumns = ['Ikona','Lp', 'Dział', 'Operacja', 'Opis', 'Uwagi', 'Status', 'Zrealizowane przez',
-                    'Data realizacji', 'Zatwierdzone przez', 'Data zatwierdzenia', 'Zaktualizuj'];
+                const headerColumns = ['Ikona', 'Lp', 'Dział', 'Operacja', 'Opis', 'Uwagi', 'Status', 'Zrealizowane przez',
+                    'Data realizacji', 'Zatwierdzone przez', 'Data zatwierdzenia', 'Zaktualizuj','Usuń'];
                 headerColumns.forEach(column => {
                     const th = document.createElement('th');
                     th.textContent = column;
                     headerRow.appendChild(th);
                 });
+
+
+
+                document.addEventListener("input", function(event) {
+                    if (event.target && event.target.id === "text") {
+                        autoExpandTextarea(event.target);
+                    }
+                });
+
+                function autoExpandTextarea(textarea) {
+                    textarea.style.width = "150px";
+                    textarea.style.height = "auto";
+                    textarea.style.height = (textarea.scrollHeight) + "px";
+                }
 
                 data.forEach((element) => {
                     if (!divisionId || element.division.id == divisionId) {
@@ -38,8 +71,8 @@ document.addEventListener("DOMContentLoaded", function() {
                         idCell.textContent = element.id;
                         imageCell.innerHTML = `<img src="/ICONS/${element.status.id}.png" alt="x" width="50" height="50">`;
                         transactionCell.innerHTML = `<input class="input-transaction" type="text" value="${element.transaction || ''}">`
-                        descriptionCell.innerHTML = `<textarea class="textarea-description">${element.description || ''}</textarea>`
-                        commentCell.innerHTML = `<textarea class="textarea-comment">${element.comment || ''}</textarea>`
+                        descriptionCell.innerHTML = `<textarea id="text" class="textarea-description">${element.description || ''}</textarea>`
+                        commentCell.innerHTML = `<textarea id="text" class="textarea-comment">${element.comment || ''}</textarea>`
                         divisionCell.textContent = element.division.name;
 
                         const statusSelect = document.createElement("select");
@@ -47,7 +80,6 @@ document.addEventListener("DOMContentLoaded", function() {
                         statusCell.appendChild(statusSelect);
 
 
-                        // Pobierz i dodaj opcje statusów do rozwijanej listy
                         fetch("/status/all")
                             .then(response => response.json())
                             .then(statuses => {
@@ -58,7 +90,6 @@ document.addEventListener("DOMContentLoaded", function() {
                                     statusSelect.appendChild(option);
                                 });
 
-                                // Ustaw początkowy wybór statusu
                                 statusSelect.value = element.status.id;
 
                             })
@@ -77,12 +108,39 @@ document.addEventListener("DOMContentLoaded", function() {
                         saveButton.classList.add('save-button');
                         actionsCell.appendChild(saveButton);
 
+
+                        const deleteButtonCell = row.insertCell();
+                        const deleteButton = document.createElement('button');
+                        deleteButton.textContent = 'Usuń';
+                        deleteButton.classList.add('delete-button');
+                        deleteButtonCell.appendChild(deleteButton);
+
+                        deleteButton.addEventListener('click', function () {
+                            const isConfirmedDelete = window.confirm('Czy na pewno chcesz usunąć ten element?');
+                            if (isConfirmedDelete) {
+                                const row = deleteButton.parentElement.parentElement;
+                                const id = row.cells[1].textContent;
+
+                                fetch(`/elements/adminDelete/${id}`, {
+                                    method: 'DELETE'
+                                })
+                                    .then(response => response.text())
+                                    .then(data => {
+                                        console.log(data);
+                                        location.reload();
+                                    })
+                                    .catch(error => {
+                                        console.error('Błąd usuwania elementu:', error);
+                                    });
+                            }
+                        });
+
                         row.classList.add('elementRow');
                         elementsTable.appendChild(row);
                     }
                 });
 
-                const newRow = elementsTable.insertRow(); // Dodaj pusty wiersz na dodawanie elementów
+                const newRow = elementsTable.insertRow();
                 newRow.innerHTML = `
 
                     <td><img src="/ICONS/5.png" alt="x" width="50" height="50"></td>
@@ -91,17 +149,15 @@ document.addEventListener("DOMContentLoaded", function() {
                     <td>
                         <select class="input-division">
                             <option value="">Wybierz dywizję</option>
-                            <!-- Pobierz i dodaj opcje dywizji do rozwijanej listy -->
-                            <!-- Zostaw puste, zostanie uzupełnione przy załadowaniu -->
+                            <!--            JavaScript          -->
                         </select>
                     </td>
                     <td><input class="input-transaction" type="text"></td>
-                    <td><textarea class="textarea-description"></textarea></td>
-                    <td><textarea class="textarea-comment"></textarea></td>
+                    <td><textarea id="text" class="textarea-description"></textarea></td>
+                    <td><textarea id="text" class="textarea-comment"></textarea></td>
                     <td>
                         <select class="input-status">
-                            <!-- Pobierz i dodaj opcje statusów do rozwijanej listy -->
-                            <!-- Zostaw puste, zostanie uzupełnione przy załadowaniu -->
+                            <!--            JavaScript          -->
                         </select>
                     </td>
                     <td><input class="input-accomplish" type="text"></td>
@@ -112,10 +168,9 @@ document.addEventListener("DOMContentLoaded", function() {
                 newRow.classList.add('elementRow', 'new-row');
                 elementsTable.appendChild(newRow);
 
-                elementsListDiv.innerHTML = ''; // Wyczyść zawartość przed dodaniem nowej tabeli
+                elementsListDiv.innerHTML = '';
                 elementsListDiv.appendChild(elementsTable);
 
-                // Pobierz i dodaj opcje dywizji do rozwijanej listy
                 const divisionSelect = newRow.querySelector('.input-division');
                 fetch("/division/all")
                     .then(response => response.json())
@@ -131,7 +186,6 @@ document.addEventListener("DOMContentLoaded", function() {
                         console.error("Błąd pobierania dywizji:", error);
                     });
 
-                // Pobierz i dodaj opcje statusów do rozwijanej listy
                 const statusSelect = newRow.querySelector('.input-status');
                 fetch("/status/all")
                     .then(response => response.json())
@@ -141,7 +195,7 @@ document.addEventListener("DOMContentLoaded", function() {
                             option.value = status.id;
                             option.textContent = status.name;
 
-                            if(status.id === 5){
+                            if (status.id === 5) {
                                 option.selected = true;
                             }
 
@@ -158,35 +212,23 @@ document.addEventListener("DOMContentLoaded", function() {
             });
     }
 
-    // Wywołanie funkcji przy starcie strony
+
     fetchAndDisplayElements();
     const dzialSelect = document.getElementById("dzial");
 
-    // Reakcja na zmianę wybranego działu
-    dzialSelect.addEventListener("change", function() {
+
+    dzialSelect.addEventListener("change", function () {
         var selectedOption = dzialSelect.options[dzialSelect.selectedIndex];
         var selectedDzialId = selectedOption.value;
 
         if (selectedDzialId === "") {
-            // Jeśli wybrano opcję "Wybierz wszystko", wyświetl wszystkie elementy
             fetchAndDisplayElements();
         } else {
-            // W przeciwnym razie, wyświetl tylko elementy z wybranej dywizji
             fetchAndDisplayElements(selectedDzialId);
         }
     });
 
-
-    function fetchStatusName(statusId) {
-        return fetch("/status/all")
-            .then(response => response.json())
-            .then(statuses => {
-                const foundStatus = statuses.find(status => status.id === statusId);
-                return foundStatus ? foundStatus.name : "";
-            });
-    }
-
-    elementsListDiv.addEventListener('click', function(event) {
+    elementsListDiv.addEventListener('click', function (event) {
         if (event.target.parentElement.classList.contains('elementRow')) {
             const selectedId = event.target.parentElement.cells[1].textContent;
 
@@ -201,60 +243,65 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    elementsListDiv.addEventListener('click', function(event) {
+    elementsListDiv.addEventListener('click', function (event) {
         if (event.target.classList.contains('save-button')) {
             const row = event.target.parentElement.parentElement;
             const id = row.cells[1].textContent;
 
-            const confirmMessages = "Czy napewno chcesz zapisać zmiany?";
-            const isConfirmed = window.confirm(confirmMessages);
+            // const confirmMessages = "Czy napewno chcesz zapisać zmiany?";
+            // const isConfirmed = window.confirm(confirmMessages);
 
-            if (isConfirmed) {
+            // if (isConfirmed) {
 
-                const inputTransaction = row.querySelector('.input-transaction');
-                const textareaDescription = row.querySelector('.textarea-description');
-                const textareaComment = row.querySelector('.textarea-comment');
-                const inputStatus = row.querySelector('.input-status');
-                const inputAccomplish = row.querySelector('.input-accomplish');
-                const inputAccomplishDate = row.querySelector('.input-accomplish-date');
-                const inputConfirmName = row.querySelector('.input-confirm-name');
-                const inputConfirmDate = row.querySelector('.input-confirm-date');
-                const formData = new URLSearchParams();
+            const inputTransaction = row.querySelector('.input-transaction');
+            const textareaDescription = row.querySelector('.textarea-description');
+            const textareaComment = row.querySelector('.textarea-comment');
+            const inputStatus = row.querySelector('.input-status');
+            const inputAccomplish = row.querySelector('.input-accomplish');
+            const inputAccomplishDate = row.querySelector('.input-accomplish-date');
+            const inputConfirmName = row.querySelector('.input-confirm-name');
+            const inputConfirmDate = row.querySelector('.input-confirm-date');
+            const formData = new URLSearchParams();
 
-                formData.append('id', id);
-                formData.append('transaction', inputTransaction.value);
-                formData.append('description', textareaDescription.value);
-                formData.append('comment', textareaComment.value);
-                formData.append('statusId', inputStatus.value);
-                formData.append('accomplish', inputAccomplish.value);
-                formData.append('accomplish_date', inputAccomplishDate.value);
-                formData.append('confirm_name', inputConfirmName.value);
-                formData.append('confirm_date', inputConfirmDate.value);
+            formData.append('id', id);
+            formData.append('transaction', inputTransaction.value);
+            formData.append('description', textareaDescription.value);
+            formData.append('comment', textareaComment.value);
+            formData.append('statusId', inputStatus.value);
+            formData.append('accomplish', inputAccomplish.value);
+            formData.append('accomplish_date', inputAccomplishDate.value);
+            formData.append('confirm_name', inputConfirmName.value);
+            formData.append('confirm_date', inputConfirmDate.value);
 
 
-                fetch(`/elements/update`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: formData.toString()
+            fetch(`/elements/update`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: formData.toString()
+            })
+                .then(response => response.text())
+                .then(data => {
+                    console.log(data);
+
+                    for (const field in inputFields) {
+                        const columnIndex = Array.from(row.cells).findIndex(cell => cell.classList.contains(field));
+                        if (columnIndex !== -1) {
+                            row.cells[columnIndex].textContent = inputFields[field];
+                        }
+                    }
                 })
-                    .then(response => response.text())
-                    .then(data => {
-                        console.log(data);
-                        location.reload(); // Odśwież tabelę elementów
-                    })
-                    .catch(error => {
-                        console.error('Błąd aktualizacji elementu:', error);
-                    });
-            }
+                .catch(error => {
+                    console.error('Błąd aktualizacji elementu:', error);
+                });
+            // }
         }
     });
 
-    elementsListDiv.addEventListener('click', function(event) {
+    elementsListDiv.addEventListener('click', function (event) {
         if (event.target.classList.contains('add-button')) {
             const newRow = event.target.parentElement.parentElement;
-            // const inputId = newRow.querySelector('.input-id');
 
             const confirmMessages = "Czy na pewno chcesz dodać element?";
             const isConfirmedAdd = window.confirm(confirmMessages);
@@ -270,7 +317,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 const inputConfirmDate = newRow.querySelector('.input-confirm-date');
 
                 const formData = new URLSearchParams();
-                // formData.append('id', inputId.value);
                 formData.append('divisionId', inputDivision.value);
                 formData.append('transaction', inputTransaction.value);
                 formData.append('description', textareaDescription.value);
@@ -299,4 +345,5 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         }
     });
+
 });

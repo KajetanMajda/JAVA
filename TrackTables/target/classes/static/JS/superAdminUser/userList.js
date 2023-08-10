@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const userListTable = document.createElement('table');
     userListTable.classList.add('userListTable');
     const userDetailsDiv = document.querySelector('.userDetails');
@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Błąd pobierania użytkowników:', error);
         });
 
-    userListTable.addEventListener('click', function(event) {
+    userListTable.addEventListener('click', function (event) {
         if (event.target.parentElement.classList.contains('userRow')) {
             const selectedEmail = event.target.parentElement.cells[3].textContent;
 

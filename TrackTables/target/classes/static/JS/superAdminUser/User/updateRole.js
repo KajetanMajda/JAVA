@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     fetch('/user/all')
         .then(response => response.json())
         .then(data => {
@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const currentRoleInput = document.getElementById('currentRole');
     const newRoleSelect = document.getElementById('newRole');
 
-    emailRoleSelect.addEventListener('change', function() {
+    emailRoleSelect.addEventListener('change', function () {
         const selectedEmail = emailRoleSelect.value;
         currentRoleInput.value = '';
 
@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
 
-            newRoleSelect.addEventListener('change', function() {
+            newRoleSelect.addEventListener('change', function () {
                 if (currentRoleInput.value === newRoleSelect.value) {
                     alert('Nie możesz wybrać tej samej roli, co obecna rola.');
                     newRoleSelect.value = '';
@@ -68,14 +68,14 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 });
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     const changeRoleButton = document.getElementById("changeRoleButton");
 
-    changeRoleButton.addEventListener("click", function(event) {
+    changeRoleButton.addEventListener("click", function (event) {
         const confirmation = window.confirm("Czy na pewno chcesz zmienić użytkownikowi rolę?");
 
         if (!confirmation) {
-            event.preventDefault(); // Zatrzymaj wysłanie formularza
+            event.preventDefault();
         }
     });
 

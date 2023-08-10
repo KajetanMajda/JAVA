@@ -2,7 +2,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const userForm = document.getElementById("userForm");
     const roleSelect = document.getElementById("role");
 
-    // Funkcja do ładowania ról do listy wyboru
     function loadRolesToSelect() {
         fetch('/userRole/allRoles')
             .then(response => response.json())

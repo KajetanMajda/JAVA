@@ -2,6 +2,24 @@ document.addEventListener("DOMContentLoaded", function () {
     const elementsListDiv = document.querySelector('.elementsList');
     const elementDetailsDiv = document.querySelector('.elementDetails');
 
+    const saveAllButton = document.querySelector('#saveAll');
+
+    // Nasłuchuj na zdarzenie "click" na przycisku "Zapisz wszytsko"
+    saveAllButton.addEventListener('click', function () {
+
+        const confirmMessages = "Czy napewno chcesz zapisać wszystkie zmiany?";
+        const isConfirmed = window.confirm(confirmMessages);
+
+        if (isConfirmed) {
+            const saveButtons = document.querySelectorAll('.save-button');
+
+            saveButtons.forEach(saveButton => {
+                saveButton.click(); // Symuluj kliknięcie przycisku "Zapisz" dla każdego rzędu
+            });
+
+        }
+    });
+
     function fetchAndDisplayElements(divisionId = null) {
         fetch('/elements/all')
             .then(response => response.json())
@@ -10,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 elementsTable.classList.add('elementsTable');
 
                 const headerRow = elementsTable.insertRow();
-                const headerColumns = ['Ikona','Lp', 'Dział', 'Operacja', 'Opis', 'Uwagi', 'Status', 'Zrealizowane przez',
+                const headerColumns = ['Ikona', 'Lp', 'Dział', 'Operacja', 'Opis', 'Uwagi', 'Status', 'Zrealizowane przez',
                     'Data realizacji', 'Zatwierdzone przez ', 'Data zatwierdzenia', 'Zaktualizuj'];
                 headerColumns.forEach(column => {
                     const th = document.createElement('th');
@@ -81,11 +99,11 @@ document.addEventListener("DOMContentLoaded", function () {
             });
     }
 
-    // Wywołanie funkcji przy starcie strony
+
     fetchAndDisplayElements();
     const dzialSelect = document.getElementById("dzial");
 
-    // Reakcja na zmianę wybranego działu
+
     dzialSelect.addEventListener("change", function () {
         var selectedOption = dzialSelect.options[dzialSelect.selectedIndex];
         var selectedDzialId = selectedOption.value;
@@ -141,7 +159,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 formData.append('accomplish_date', inputAccomplishDate.value);
 
 
-
                 fetch(`/elements/update`, {
                     method: 'PUT',
                     headers: {
@@ -152,7 +169,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     .then(response => response.text())
                     .then(data => {
                         console.log(data);
-                        location.reload(); // Odśwież tabelę elementów
+                        location.reload();
                     })
                     .catch(error => {
                         console.error('Błąd aktualizacji elementu:', error);
