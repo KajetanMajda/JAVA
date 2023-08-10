@@ -142,6 +142,16 @@ public class ElementsController {
         }
     }
 
+    @DeleteMapping("/adminDelete/{id}")
+    public ResponseEntity<String> deleteElement(@PathVariable Integer id) {
+        try {
+            elementsRepository.deleteById(id);
+            return ResponseEntity.ok("Element został usunięty.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Błąd usuwania elementu.");
+        }
+    }
+
     @GetMapping(path = "/getToCopy/{divisionId}")
     public @ResponseBody ResponseEntity<List<String>> copyDivision(@PathVariable Integer divisionId) {
         List<Elements> elementsList = elementsRepository.findByDivisionId(divisionId);

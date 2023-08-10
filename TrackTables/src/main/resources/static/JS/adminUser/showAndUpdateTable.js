@@ -11,13 +11,24 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 const headerRow = elementsTable.insertRow();
                 const headerColumns = ['Ikona', 'Lp', 'Dział', 'Operacja', 'Opis', 'Uwagi', 'Status', 'Zrealizowane przez',
-                    'Data realizacji', 'Zatwierdzone przez', 'Data zatwierdzenia', 'Zaktualizuj'];
+                    'Data realizacji', 'Zatwierdzone przez', 'Data zatwierdzenia', 'Zaktualizuj','Usuń'];
                 headerColumns.forEach(column => {
                     const th = document.createElement('th');
                     th.textContent = column;
                     headerRow.appendChild(th);
                 });
 
+                document.addEventListener("input", function(event) {
+                    if (event.target && event.target.id === "expand") {
+                        autoExpandTextarea(event.target);
+                    }
+                });
+
+                function autoExpandTextarea(textarea) {
+                    textarea.style.width = "150px";
+                    textarea.style.height = "auto";
+                    textarea.style.height = (textarea.scrollHeight) + "px";
+                }
                 data.forEach((element) => {
                     if (!divisionId || element.division.id == divisionId) {
                         const row = elementsTable.insertRow();
@@ -37,8 +48,8 @@ document.addEventListener("DOMContentLoaded", function () {
                         idCell.textContent = element.id;
                         imageCell.innerHTML = `<img src="/ICONS/${element.status.id}.png" alt="x" width="50" height="50">`;
                         transactionCell.innerHTML = `<input class="input-transaction" type="text" value="${element.transaction || ''}">`
-                        descriptionCell.innerHTML = `<textarea class="textarea-description">${element.description || ''}</textarea>`
-                        commentCell.innerHTML = `<textarea class="textarea-comment">${element.comment || ''}</textarea>`
+                        descriptionCell.innerHTML = `<textarea id="expand" class="textarea-description">${element.description || ''}</textarea>`
+                        commentCell.innerHTML = `<textarea id="expand" class="textarea-comment">${element.comment || ''}</textarea>`
                         divisionCell.textContent = element.division.name;
 
                         const statusSelect = document.createElement("select");
@@ -74,6 +85,33 @@ document.addEventListener("DOMContentLoaded", function () {
                         saveButton.classList.add('save-button');
                         actionsCell.appendChild(saveButton);
 
+
+                        const deleteButtonCell = row.insertCell();
+                        const deleteButton = document.createElement('button');
+                        deleteButton.textContent = 'Usuń';
+                        deleteButton.classList.add('delete-button');
+                        deleteButtonCell.appendChild(deleteButton);
+
+                        deleteButton.addEventListener('click', function () {
+                            const isConfirmedDelete = window.confirm('Czy na pewno chcesz usunąć ten element?');
+                            if (isConfirmedDelete) {
+                                const row = deleteButton.parentElement.parentElement;
+                                const id = row.cells[1].textContent;
+
+                                fetch(`/elements/adminDelete/${id}`, {
+                                    method: 'DELETE'
+                                })
+                                    .then(response => response.text())
+                                    .then(data => {
+                                        console.log(data);
+                                        location.reload();
+                                    })
+                                    .catch(error => {
+                                        console.error('Błąd usuwania elementu:', error);
+                                    });
+                            }
+                        });
+
                         row.classList.add('elementRow');
                         elementsTable.appendChild(row);
                     }
@@ -92,8 +130,8 @@ document.addEventListener("DOMContentLoaded", function () {
                         </select>
                     </td>
                     <td><input class="input-transaction" type="text"></td>
-                    <td><textarea class="textarea-description"></textarea></td>
-                    <td><textarea class="textarea-comment"></textarea></td>
+                    <td><textarea id="expand" class="textarea-description"></textarea></td>
+                    <td><textarea id="expand" class="textarea-comment"></textarea></td>
                     <td>
                         <select class="input-status">
                             <!--            JavaScript          -->
@@ -278,4 +316,5 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
     });
+
 });

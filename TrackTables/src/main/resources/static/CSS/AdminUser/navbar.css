@@ -32,6 +32,30 @@
     transition: background-color 0.3s ease;
 }
 
+#saveAll {
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    padding: 8px;
+    width: 200px;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#logoutButton{
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    padding: 8px;
+    width: 100px;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
 .navbar-right button:hover {
     background-color: #45a049;
 }
@@ -47,4 +71,32 @@
     padding:8px;
     text-align: center;
     cursor: pointer;
+}
+
+.navbar-right input{
+    border: 1px solid whitesmoke;
+    border-radius: 6px;
+    box-sizing: border-box;
+    background-color: whitesmoke;
+    padding:8px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.addProject {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap:5px;
+}
+.addProject button {
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    padding: 8px;
+    width: 100%;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }

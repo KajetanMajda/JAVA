@@ -97,10 +97,14 @@ table {
     background-color: whitesmoke;
     text-align: center;
     padding:5px;
-    width: 100%;
+    width: 150px;
     cursor: pointer;
-}
 
+    resize: none;
+    overflow: hidden;
+    height: auto;
+    transition: height 0.2s;
+}
 
 .tableInside select{
     border: 1px solid #ccc;
@@ -122,21 +126,10 @@ table {
     cursor: pointer;
     font-size: 14px;
     text-align: center;
-    width: 100%;
+    width: 80px;
     padding:5px;
 }
 
 .tableInside button:hover {
     background-color: #45a049;
-}
-
-
-.confirmation-alert {
-    background-color: pink;
-    border: 1px solid #ccc;
-    padding: 10px;
-    text-align: center;
-    font-size: 16px;
-    color: #333;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }
