@@ -22,6 +22,8 @@ public class Elements {
     private LocalDate accomplish_date;
     private String confirm;
     private LocalDate confirm_date;
+    @Column(name = "uwagi_z_realizacji")
+    private String uwagi_z_realizacji;
 
     @ManyToOne
     @JoinColumn(name = "division_id")

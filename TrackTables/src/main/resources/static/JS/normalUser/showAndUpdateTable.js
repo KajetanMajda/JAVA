@@ -2,24 +2,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const elementsListDiv = document.querySelector('.elementsList');
     const elementDetailsDiv = document.querySelector('.elementDetails');
 
-    const saveAllButton = document.querySelector('#saveAll');
-
-    // Nasłuchuj na zdarzenie "click" na przycisku "Zapisz wszytsko"
-    saveAllButton.addEventListener('click', function () {
-
-        const confirmMessages = "Czy napewno chcesz zapisać wszystkie zmiany?";
-        const isConfirmed = window.confirm(confirmMessages);
-
-        if (isConfirmed) {
-            const saveButtons = document.querySelectorAll('.save-button');
-
-            saveButtons.forEach(saveButton => {
-                saveButton.click(); // Symuluj kliknięcie przycisku "Zapisz" dla każdego rzędu
-            });
-
-        }
-    });
-
     function fetchAndDisplayElements(divisionId = null) {
         fetch('/elements/all')
             .then(response => response.json())
@@ -28,13 +10,25 @@ document.addEventListener("DOMContentLoaded", function () {
                 elementsTable.classList.add('elementsTable');
 
                 const headerRow = elementsTable.insertRow();
-                const headerColumns = ['Ikona', 'Lp', 'Dział', 'Operacja', 'Opis', 'Uwagi', 'Status', 'Zrealizowane przez',
+                const headerColumns = ['Ikona', 'Lp', 'Dział', 'Operacja', 'Opis', 'Uwagi', 'Status','Uwagi z realizacji' ,'Zrealizowane przez',
                     'Data realizacji', 'Zatwierdzone przez ', 'Data zatwierdzenia', 'Zaktualizuj'];
                 headerColumns.forEach(column => {
                     const th = document.createElement('th');
                     th.textContent = column;
                     headerRow.appendChild(th);
                 });
+
+                document.addEventListener("input", function(event) {
+                    if (event.target && event.target.id === "text") {
+                        autoExpandTextarea(event.target);
+                    }
+                });
+
+                function autoExpandTextarea(textarea) {
+                    textarea.style.width = "150px";
+                    textarea.style.height = "auto";
+                    textarea.style.height = (textarea.scrollHeight) + "px";
+                }
 
                 data.forEach((element) => {
                     if (!divisionId || element.division.id == divisionId) {
@@ -46,11 +40,13 @@ document.addEventListener("DOMContentLoaded", function () {
                         const descriptionCell = row.insertCell();
                         const commentCell = row.insertCell();
                         const statusCell = row.insertCell();
+                        const uwagiRealizacjiCell = row.insertCell();
                         const accomplishCell = row.insertCell();
                         const accomplishDateCell = row.insertCell();
                         const confirm_nameCell = row.insertCell();
                         const confirmDateCell = row.insertCell();
                         const actionsCell = row.insertCell();
+
 
                         idCell.textContent = element.id;
 
@@ -70,9 +66,10 @@ document.addEventListener("DOMContentLoaded", function () {
                             .catch(error => {
                                 console.error("Błąd pobierania nazwy statusu:", error);
                             });
-                        if (element.accomplish === null && element.accomplish_date === null) {
-                            accomplishCell.innerHTML = `<input class="input-accomplish" type="text" value="${element.accomplish || ''}">`;
-                            accomplishDateCell.innerHTML = `<input class="input-accomplish-date" type="date" value="${element.accomplish_date || ''}">`;
+                        uwagiRealizacjiCell.innerHTML = `<textarea id = "text" class="input-uwagi-realizacja">${element.uwagi_z_realizacji || ''}</textarea>`;
+                        if (element.accomplish === null || element.accomplish_date === null) {
+                            accomplishCell.innerHTML = `<input class="input-accomplish" type="checkbox" >`;
+                            accomplishDateCell.innerHTML = `<input class="input-accomplish-date" type="date" readonly>`;
                         } else {
                             accomplishCell.innerHTML = element.accomplish;
                             accomplishDateCell.innerHTML = element.accomplish_date;
@@ -140,24 +137,55 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
+
+
+    // if (this.checked) {
     elementsListDiv.addEventListener('click', function (event) {
         if (event.target.classList.contains('save-button')) {
             const row = event.target.parentElement.parentElement;
             const id = row.cells[1].textContent;
 
-            const confirmMessages = "Czy napewno chcesz zapisać zmiany? PAMIETAJ! ze musisz miec wypełnione 2 pole bo już potem nie mozesz ich edytować";
-            const isConfirmed = window.confirm(confirmMessages);
+            const inputAccomplish = row.querySelector('.input-accomplish');
+            const textAreaUwagiRealizacji = row.querySelector('.input-uwagi-realizacja');
+            const formData = new URLSearchParams();
 
-            if (isConfirmed) {
-                const inputAccomplish = row.querySelector('.input-accomplish');
-                const inputAccomplishDate = row.querySelector('.input-accomplish-date');
+            formData.append('id', id);
+            formData.append('uwagi_z_realizacji', textAreaUwagiRealizacji.value);
 
+            fetch(`/elements/update`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: formData.toString()
+            })
+                .then(response => response.text())
+                .then(data => {
+                    console.log(data);
+                })
+                .catch(error => {
+                    console.error('Błąd aktualizacji elementu:', error);
+                });
+
+            if (inputAccomplish.checked) {
+                const loggedInUserEmailSpan = document.getElementById('loggedInUserEmail');
+                const loggedInUserEmail = loggedInUserEmailSpan.textContent;
+
+                let currentDate = new Date().toJSON().slice(0, 10);
                 const formData = new URLSearchParams();
 
-                formData.append('id', id);
-                formData.append('accomplish', inputAccomplish.value);
-                formData.append('accomplish_date', inputAccomplishDate.value);
+                const username = loggedInUserEmail.split('@')[0];
+                const words = username.split('.');
+                const formattedNameArray = words.map(word => {
+                    const firstLetter = word.charAt(0).toUpperCase();
+                    const restOfWord = word.slice(1).toLowerCase();
+                    return firstLetter + restOfWord;
+                });
+                const formattedName = formattedNameArray.join('. ');
 
+                formData.append('id', id);
+                formData.append('accomplish', formattedName);
+                formData.append('accomplish_date', currentDate);
 
                 fetch(`/elements/update`, {
                     method: 'PUT',
@@ -169,12 +197,14 @@ document.addEventListener("DOMContentLoaded", function () {
                     .then(response => response.text())
                     .then(data => {
                         console.log(data);
-                        location.reload();
                     })
                     .catch(error => {
                         console.error('Błąd aktualizacji elementu:', error);
                     });
+            } else {
+                alert("Musisz zaznaczyć checkbox.");
             }
         }
     });
+    // }
 });

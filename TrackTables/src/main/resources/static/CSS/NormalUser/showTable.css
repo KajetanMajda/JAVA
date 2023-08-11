@@ -9,6 +9,7 @@
     border-radius: 10px;
     border: 2px solid #333;
     margin: auto;
+    overflow: hidden;
 }
 .tableInside p{
     text-align: center;
@@ -41,10 +42,11 @@ table {
 .scrollable {
     overflow: auto;
     max-height: 100%;
+
 }
 
 ::-webkit-scrollbar {
-    width: 6px;
+    width: 10px;
     margin-bottom: 10px;
     margin-top: 10px;
 }
@@ -70,6 +72,35 @@ table {
 }
 
 ::-webkit-scrollbar-track-piece {
+    background-color: #f1f1f1;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar:horizontal {
+    height: 10px;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+::-webkit-scrollbar-thumb:horizontal {
+    background-color: #4caf50;
+    border-radius: 10px;
+    margin: 0;
+}
+
+::-webkit-scrollbar-thumb:horizontal:hover {
+    background-color: #45a049;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-track:horizontal {
+    background-color: #f1f1f1;
+    border-radius: 10px;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+::-webkit-scrollbar-track-piece:horizontal {
     background-color: #f1f1f1;
     border-radius: 10px;
 }
@@ -106,4 +137,19 @@ table {
 
 .tableInside button:hover {
     background-color: #45a049;
+}
+
+.tableInside textarea{
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+    background-color: whitesmoke;
+    text-align: center;
+    padding:5px;
+    width: 150px;
+    cursor: pointer;
+
+    resize: none;
+    overflow: hidden;
+    transition: height 0.2s;
 }

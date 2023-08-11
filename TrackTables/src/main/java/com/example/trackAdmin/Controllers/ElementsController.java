@@ -36,6 +36,7 @@ public class ElementsController {
                                               @RequestParam(required = false) String comment,
                                               @RequestParam(required = false) String confirm_name,
                                               @RequestParam(required = false) Integer statusId,
+                                              @RequestParam(required = false) String uwagi_z_realizacji,
                                               @RequestParam(required = false) String accomplish,
                                               @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate accomplish_date,
                                               @RequestParam(required = false) String confirm,
@@ -48,6 +49,7 @@ public class ElementsController {
         elements.setComment(comment);
         elements.setConfirm_name(confirm_name);
         elements.setAccomplish(accomplish);
+        elements.setUwagi_z_realizacji(uwagi_z_realizacji);
         elements.setAccomplish_date(accomplish_date);
         elements.setConfirm(confirm);
         elements.setConfirm_date(confirm_date);
@@ -75,6 +77,7 @@ public class ElementsController {
                                            @RequestParam(required = false) String comment,
                                            @RequestParam(required = false) String confirm_name,
                                            @RequestParam(required = false) Integer statusId,
+                                           @RequestParam(required = false) String uwagi_z_realizacji,
                                            @RequestParam(required = false) String accomplish,
                                            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate accomplish_date,
                                            @RequestParam(required = false) String confirm,
@@ -100,6 +103,9 @@ public class ElementsController {
                 if (status != null) {
                     elementsUpdate.setStatus(status);
                 }
+            }
+            if(uwagi_z_realizacji != null){
+                elementsUpdate.setUwagi_z_realizacji(uwagi_z_realizacji);
             }
             if (accomplish != null) {
                 elementsUpdate.setAccomplish(accomplish);

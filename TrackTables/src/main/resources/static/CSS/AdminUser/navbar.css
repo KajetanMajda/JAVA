@@ -43,6 +43,17 @@
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
+#standardsAdmin{
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    padding: 8px;
+    width: 100px;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
 
 #logoutButton{
     background-color: #4caf50;

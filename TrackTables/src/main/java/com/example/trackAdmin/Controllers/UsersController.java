@@ -14,6 +14,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.io.IOException;
+
+
 @Controller
 @RequestMapping(path = "/user")
 public class UsersController {
@@ -125,6 +135,20 @@ public class UsersController {
         return "superAdminUser";
     }
 
+    @GetMapping(path ="/adminUser/standards")
+    public String adminUserStandardsPage (Model model, HttpSession session){
+        String loggedInUserEmail = (String) session.getAttribute("loggedInUserEmail");
+        model.addAttribute("loggedInUserEmail", loggedInUserEmail);
+        return "adminUserStandardsPage";
+    }
+
+    @GetMapping(path ="/normalUser/standards")
+    public String normalUserStandardsPage (Model model, HttpSession session){
+        String loggedInUserEmail = (String) session.getAttribute("loggedInUserEmail");
+        model.addAttribute("loggedInUserEmail", loggedInUserEmail);
+        return "normalUserStandardsPage";
+    }
+
 
     @GetMapping(path = "/error")
     public String errorPage() {
@@ -206,6 +230,26 @@ public class UsersController {
     public @ResponseBody List<String> getAllUserEmails() {
         List<Users> users = (List<Users>) usersRepository.findAll();
         return users.stream().map(Users::getEmail).collect(Collectors.toList());
+    }
+
+    @GetMapping(value = "/adminUser/standardy.xlsx", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public ResponseEntity<Resource> getFile() throws IOException {
+        Resource resource = new ClassPathResource("standardy.xlsx");
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .header("Content-Disposition", "attachment; filename=standardy.xlsx")
+                .body(resource);
+    }
+
+    @GetMapping(value = "/normalUser/standardy.xlsx", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public ResponseEntity<Resource> getFiles() throws IOException {
+
+        Resource resource = new ClassPathResource("standardy.xlsx");
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .header("Content-Disposition", "attachment; filename=standardy.xlsx")
+                .body(resource);
     }
 
 }
