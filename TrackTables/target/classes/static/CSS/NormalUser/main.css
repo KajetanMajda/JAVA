@@ -1,6 +1,7 @@
 @import "footer.css";
 @import "navbar.css";
 @import "showTable.css";
+@import "normalUserStandardsPage.css";
 
 * {
     margin: 0;

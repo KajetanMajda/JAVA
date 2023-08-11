@@ -1,4 +1,4 @@
-.tableInside {
+.showExelInside {
     background: white;
     width: 90%;
     height: 80%;
@@ -11,7 +11,7 @@
     margin: auto;
     overflow: hidden;
 }
-.tableInside p{
+.showExelInside p{
     text-align: center;
     font-size: 18px;
     text-transform: uppercase;
@@ -33,17 +33,16 @@ th {
 }
 
 table {
-    margin-left:1%;
-    width: 98%;
+    margin-left:2.5%;
+    width: 95%;
     margin-bottom:2.5%;
-    margin-right:1%;
 }
 
 
 .scrollable {
     overflow: auto;
     max-height: 100%;
-    border-radius: 10px;
+
 }
 
 ::-webkit-scrollbar {
@@ -112,8 +111,7 @@ table {
 
 
 
-
-.tableInside input{
+.showExelInside input{
     border: 1px solid #ccc;
     border-radius: 6px;
     box-sizing: border-box;
@@ -123,7 +121,25 @@ table {
     width: 100%;
     cursor: pointer;
 }
-.tableInside textarea{
+
+.showExelInside button {
+    background-color: #4caf50;
+    color: white;
+    height: 100%;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    text-align: center;
+    width: 100%;
+    padding:5px;
+}
+
+.showExelInside button:hover {
+    background-color: #45a049;
+}
+
+.showExelInside textarea{
     border: 1px solid #ccc;
     border-radius: 6px;
     box-sizing: border-box;
@@ -136,32 +152,4 @@ table {
     resize: none;
     overflow: hidden;
     transition: height 0.2s;
-}
-
-.tableInside select{
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    box-sizing: border-box;
-    background-color: whitesmoke;
-    text-align: center;
-    padding:5px;
-    width:140px;
-    cursor: pointer;
-}
-
-.tableInside button {
-    background-color: #4caf50;
-    color: white;
-    height: 100%;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    text-align: center;
-    width: 80px;
-    padding:5px;
-}
-
-.tableInside button:hover {
-    background-color: #45a049;
 }
