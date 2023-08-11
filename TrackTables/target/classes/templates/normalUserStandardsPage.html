@@ -6,6 +6,8 @@
     <link rel="stylesheet" href="/CSS/NormalUser/main.css">
     <link rel="stylesheet" href="/CSS/EXEL/standardShow.css">
     <title>Normal User Standards Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 <body>
 <div class="navbar">
@@ -16,6 +18,7 @@
         <button id="logoutButton">Wyloguj</button>
     </div>
 </div>
+
 <div class="showExel">
     <div class="showExelInside scrollable">
         <p>Tabela Exel</p>
@@ -24,6 +27,7 @@
         </table>
     </div>
 </div>
+
 <div class="footer">
     <p>Zalogowany użytkownik: <span id="userFullName"></span><span id="loggedInUserEmail" th:text="${loggedInUserEmail}" hidden=""></span></p>
 </div>
@@ -32,7 +36,7 @@
         window.location.href = "/user/normalUser";
     });
 </script>
-
+<script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
 <script type="text/javascript" src="/JS/exel/standardsShow.js"></script>
 <script type="text/javascript" src="/JS/normalUser/standardsShow.js"></script>
 <script type="text/javascript" src="/JS/login/login.js"></script>
